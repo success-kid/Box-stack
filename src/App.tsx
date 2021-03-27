@@ -35,20 +35,23 @@ export const App = () => {
   let stack: Layer[] = [];
   let overhangs: Layer[] = [];
   const boxHeight = 1;
-  let scene: Scene, camera: OrthographicCamera, renderer: WebGLRenderer;
-  let world: World;
   const originalBoxSize = 3;
-  let gameStarted = false;
   const [score, setScore] = useState(0);
   const [infiniteMode, setInfiniteMode] = useState(false);
 
-  const init = () => {
-    world = new World();
-    world.gravity.set(0, -10, 0);
-    world.broadphase = new NaiveBroadphase();
-    world.solver.iterations = 40;
+  const gameStarted = React.useRef<boolean>(false);
+  const world = React.useRef<World>();
+  const scene = React.useRef<Scene>();
+  const camera = React.useRef<OrthographicCamera>();
+  const renderer = React.useRef<WebGLRenderer>();
 
-    scene = new Scene();
+  const init = () => {
+    world.current = new World();
+    world.current.gravity.set(0, -10, 0);
+    world.current.broadphase = new NaiveBroadphase();
+    world.current.solver.iterations = 40;
+
+    scene.current = new Scene();
 
     // Foundation
     addLayer(0, 0, originalBoxSize, originalBoxSize, "x");
@@ -58,16 +61,16 @@ export const App = () => {
 
     // Set up lights
     const ambientLight = new AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
+    scene.current.add(ambientLight);
 
     const directionalLight = new DirectionalLight(0xffffff, 0.6);
     directionalLight.position.set(10, 20, 0);
-    scene.add(directionalLight);
+    scene.current.add(directionalLight);
 
     // Camera
     const width = 15;
     const height = width * (window.innerHeight / window.innerWidth);
-    camera = new OrthographicCamera(
+    camera.current = new OrthographicCamera(
       width / -1,
       width / 1,
       height / 1,
@@ -75,19 +78,21 @@ export const App = () => {
       1,
       100
     );
-    camera.position.set(4, 4, 4);
-    camera.lookAt(0, 0, 0);
+    camera.current.position.set(4, 4, 4);
+    camera.current.lookAt(0, 0, 0);
 
     // Renderer
-    renderer = new WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.current = new WebGLRenderer({ antialias: true });
+    renderer.current.setSize(window.innerWidth, window.innerHeight);
     renderScene();
 
-    document.body.appendChild(renderer.domElement);
+    document.body.appendChild(renderer.current.domElement);
   };
 
   const renderScene = () => {
-    renderer.render(scene, camera);
+    if (renderer.current && scene.current && camera.current) {
+      renderer.current.render(scene.current, camera.current);
+    }
   };
 
   const addLayer = (
@@ -126,7 +131,9 @@ export const App = () => {
     const cube = new Mesh(geometry, material);
     cube.position.set(x, y, z);
 
-    scene.add(cube);
+    if (scene.current) {
+      scene.current.add(cube);
+    }
 
     const shape = new CannonBox(new Vec3(width / 2, boxHeight / 2, depth / 2));
 
@@ -134,7 +141,9 @@ export const App = () => {
 
     const body = new Body({ mass, shape });
     body.position.set(x, y, z);
-    world.addBody(body);
+    if (world.current) {
+      world.current.addBody(body);
+    }
 
     return {
       threejs: cube,
@@ -155,8 +164,10 @@ export const App = () => {
     // let calc = boxHeight * (stack.length - 2) + 4;
     let calc = stack.length + 2;
 
-    if (camera.position.y < calc) {
-      camera.position.y += speed;
+    if (camera.current) {
+      if (camera.current.position.y < calc) {
+        camera.current.position.y += speed;
+      }
     }
     updatePhysics();
     renderScene();
@@ -188,7 +199,9 @@ export const App = () => {
   };
 
   const updatePhysics = () => {
-    world.step(1 / 60);
+    if (world.current) {
+      world.current.step(1 / 60);
+    }
     overhangs.forEach((element: any) => {
       element.threejs.position.copy(element.cannonjs.position);
       element.threejs.quaternion.copy(element.cannonjs.quaternion);
@@ -196,9 +209,11 @@ export const App = () => {
   };
 
   const startGame = () => {
-    if (gameStarted === false) {
-      renderer.setAnimationLoop(animation);
-      gameStarted = true;
+    if (gameStarted.current === false) {
+      if (renderer.current) {
+        renderer.current.setAnimationLoop(animation);
+      }
+      gameStarted.current = true;
     } else {
       const topLayer = stack[stack.length - 1];
       const previousLayer = stack[stack.length - 2];
@@ -273,8 +288,8 @@ export const App = () => {
       topLayer.width,
       topLayer.depth
     );
-    world.remove(topLayer.cannonjs);
-    scene.remove(topLayer.threejs);
+    // world.current.remove(topLayer.cannonjs);
+    // scene.remove(topLayer.threejs);
 
     console.log("you lose");
 
