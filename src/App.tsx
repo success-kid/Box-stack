@@ -117,11 +117,10 @@ export const App = () => {
             top={100}
             right={10}
             onClick={() => {
-              {
-                infiniteMode.current
-                  ? (infiniteMode.current = false)
-                  : (infiniteMode.current = true);
-              }
+              infiniteMode.current
+                ? (infiniteMode.current = false)
+                : (infiniteMode.current = true);
+
               // setInfiniteMode(!infiniteMode);
             }}
             rightIcon={infiniteMode.current ? <FaCheck /> : <MdClose />}
