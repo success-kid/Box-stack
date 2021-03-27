@@ -95,7 +95,7 @@ export const App = () => {
     );
   }, []);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   return (
     <ChakraProvider theme={customTheme}>
       <Box position="relative">
@@ -118,7 +118,7 @@ export const App = () => {
             right={10}
             onClick={() => {
               {
-                infiniteMode.current === true
+                infiniteMode.current
                   ? (infiniteMode.current = false)
                   : (infiniteMode.current = true);
               }
@@ -135,7 +135,7 @@ export const App = () => {
               <ModalHeader>Settings</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Button
+                {/* <Button
                   onClick={() => {
                     {
                       infiniteMode.current === true
@@ -147,7 +147,7 @@ export const App = () => {
                   rightIcon={infiniteMode ? <FaCheck /> : <MdClose />}
                 >
                   Infinite Mode
-                </Button>
+                </Button> */}
               </ModalBody>
 
               <ModalFooter>
