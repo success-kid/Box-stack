@@ -32,164 +32,172 @@ import customTheme from "./theme";
 import { Layer } from "./types";
 
 export const App = () => {
-  let stack: Layer[] = [];
-  let overhangs: Layer[] = [];
   const boxHeight = 1;
   const originalBoxSize = 3;
   const [score, setScore] = useState(0);
   const [infiniteMode, setInfiniteMode] = useState(false);
 
+  let stack = React.useRef<Layer[]>([]);
+  let overhangs = React.useRef<Layer[]>([]);
   const gameStarted = React.useRef<boolean>(false);
   const world = React.useRef<World>();
   const scene = React.useRef<Scene>();
   const camera = React.useRef<OrthographicCamera>();
   const renderer = React.useRef<WebGLRenderer>();
 
-  const renderScene = () => {
-    if (renderer.current && scene.current && camera.current) {
-      renderer.current.render(scene.current, camera.current);
-    }
-  };
-
-  const addLayer = (
-    x: number,
-    z: number,
-    width: number,
-    depth: number,
-    direction: "x" | "z"
-  ) => {
-    const y = boxHeight * stack.length;
-    const layer: Layer = generateBox(x, y, z, width, depth, direction, false);
-    stack.push(layer);
-    setScore(stack.length - 1);
-  };
-  const addOverhang = (x: number, z: number, width: number, depth: number) => {
-    const y = boxHeight * (stack.length - 1);
-    const overhang: Layer = generateBox(x, y, z, width, depth, "x", true);
-    overhangs.push(overhang);
-  };
-
-  const generateBox = (
-    x: number,
-    y: number,
-    z: number,
-    width: number,
-    depth: number,
-    direction: "x" | "z",
-    falls: boolean
-  ) => {
-    const geometry = new BoxGeometry(width, boxHeight, depth);
-
-    // generates cube color (hue saturation and lightness) based on stack length
-    const color = new Color(`hsl(${30 + stack.length * 4}, 100%, 50%)`);
-    const material = new MeshLambertMaterial({ color });
-
-    const cube = new Mesh(geometry, material);
-    cube.position.set(x, y, z);
-
-    if (scene.current) {
-      scene.current.add(cube);
-    }
-
-    const shape = new CannonBox(new Vec3(width / 2, boxHeight / 2, depth / 2));
-
-    let mass = falls ? 5 : 0;
-
-    const body = new Body({ mass, shape });
-    body.position.set(x, y, z);
-    if (world.current) {
-      world.current.addBody(body);
-    }
-
-    return {
-      threejs: cube,
-      cannonjs: body,
-      width,
-      depth,
-      direction,
-    };
-  };
-
-  const animation = () => {
-    const speed = 0.15;
-
-    const topLayer: Layer = stack[stack.length - 1];
-
-    topLayer.threejs.position[topLayer.direction] += speed;
-    topLayer.cannonjs.position[topLayer.direction] += speed;
-    // let calc = boxHeight * (stack.length - 2) + 4;
-    let calc = stack.length + 2;
-
-    if (camera.current) {
-      if (camera.current.position.y < calc) {
-        camera.current.position.y += speed;
-      }
-    }
-    updatePhysics();
-    renderScene();
-  };
-  const cutBox = (
-    topLayer: Layer,
-    overlap: number,
-    size: number,
-    delta: number
-  ) => {
-    const direction = topLayer.direction;
-    const newWidth = direction === "x" ? overlap : topLayer.width;
-    const newDepth = direction === "z" ? overlap : topLayer.depth;
-
-    topLayer.width = newWidth;
-    topLayer.depth = newDepth;
-
-    topLayer.threejs.scale[direction] = overlap / size;
-    topLayer.threejs.position[direction] -= delta / 2;
-
-    topLayer.cannonjs.position[direction] -= delta / 2;
-
-    const shape = new CannonBox(
-      new Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
-    );
-
-    topLayer.cannonjs.shapes = [];
-    topLayer.cannonjs.addShape(shape);
-  };
-
-  const updatePhysics = () => {
-    if (world.current) {
-      world.current.step(1 / 60);
-    }
-    overhangs.forEach((element: any) => {
-      element.threejs.position.copy(element.cannonjs.position);
-      element.threejs.quaternion.copy(element.cannonjs.quaternion);
-    });
-  };
-
-  const missedTheSpot = () => {
-    const topLayer = stack[stack.length - 1];
-
-    // Turn to top layer into an overhang and let it fall down
-    addOverhang(
-      topLayer.threejs.position.x,
-      topLayer.threejs.position.z,
-      topLayer.width,
-      topLayer.depth
-    );
-    if (world.current) {
-      world.current.remove(topLayer.cannonjs);
-    }
-
-    if (scene.current) {
-      scene.current.remove(topLayer.threejs);
-    }
-
-    console.log("you lose");
-
-    // gameEnded = true;
-
-    // if (resultsElement && !autopilot) resultsElement.style.display = "flex";
-  };
-
   useEffect(() => {
+    const renderScene = () => {
+      if (renderer.current && scene.current && camera.current) {
+        renderer.current.render(scene.current, camera.current);
+      }
+    };
+
+    const addLayer = (
+      x: number,
+      z: number,
+      width: number,
+      depth: number,
+      direction: "x" | "z"
+    ) => {
+      const y = boxHeight * stack.current.length;
+      const layer: Layer = generateBox(x, y, z, width, depth, direction, false);
+      stack.current.push(layer);
+      setScore(stack.current.length - 1);
+    };
+    const addOverhang = (
+      x: number,
+      z: number,
+      width: number,
+      depth: number
+    ) => {
+      const y = boxHeight * (stack.current.length - 1);
+      const overhang: Layer = generateBox(x, y, z, width, depth, "x", true);
+      overhangs.current.push(overhang);
+    };
+
+    const generateBox = (
+      x: number,
+      y: number,
+      z: number,
+      width: number,
+      depth: number,
+      direction: "x" | "z",
+      falls: boolean
+    ) => {
+      const geometry = new BoxGeometry(width, boxHeight, depth);
+
+      // generates cube color (hue saturation and lightness) based on stack length
+      const color = new Color(
+        `hsl(${30 + stack.current.length * 4}, 100%, 50%)`
+      );
+      const material = new MeshLambertMaterial({ color });
+
+      const cube = new Mesh(geometry, material);
+      cube.position.set(x, y, z);
+
+      if (scene.current) {
+        scene.current.add(cube);
+      }
+
+      const shape = new CannonBox(
+        new Vec3(width / 2, boxHeight / 2, depth / 2)
+      );
+
+      let mass = falls ? 5 : 0;
+
+      const body = new Body({ mass, shape });
+      body.position.set(x, y, z);
+      if (world.current) {
+        world.current.addBody(body);
+      }
+
+      return {
+        threejs: cube,
+        cannonjs: body,
+        width,
+        depth,
+        direction,
+      };
+    };
+
+    const animation = () => {
+      const speed = 0.15;
+
+      const topLayer: Layer = stack.current[stack.current.length - 1];
+
+      topLayer.threejs.position[topLayer.direction] += speed;
+      topLayer.cannonjs.position[topLayer.direction] += speed;
+      // let calc = boxHeight * (stack.length - 2) + 4;
+      let calc = stack.current.length + 2;
+
+      if (camera.current) {
+        if (camera.current.position.y < calc) {
+          camera.current.position.y += speed;
+        }
+      }
+      updatePhysics();
+      renderScene();
+    };
+    const cutBox = (
+      topLayer: Layer,
+      overlap: number,
+      size: number,
+      delta: number
+    ) => {
+      const direction = topLayer.direction;
+      const newWidth = direction === "x" ? overlap : topLayer.width;
+      const newDepth = direction === "z" ? overlap : topLayer.depth;
+
+      topLayer.width = newWidth;
+      topLayer.depth = newDepth;
+
+      topLayer.threejs.scale[direction] = overlap / size;
+      topLayer.threejs.position[direction] -= delta / 2;
+
+      topLayer.cannonjs.position[direction] -= delta / 2;
+
+      const shape = new CannonBox(
+        new Vec3(newWidth / 2, boxHeight / 2, newDepth / 2)
+      );
+
+      topLayer.cannonjs.shapes = [];
+      topLayer.cannonjs.addShape(shape);
+    };
+
+    const updatePhysics = () => {
+      if (world.current) {
+        world.current.step(1 / 60);
+      }
+      overhangs.current.forEach((element: any) => {
+        element.threejs.position.copy(element.cannonjs.position);
+        element.threejs.quaternion.copy(element.cannonjs.quaternion);
+      });
+    };
+
+    const missedTheSpot = () => {
+      const topLayer = stack.current[stack.current.length - 1];
+
+      // Turn to top layer into an overhang and let it fall down
+      addOverhang(
+        topLayer.threejs.position.x,
+        topLayer.threejs.position.z,
+        topLayer.width,
+        topLayer.depth
+      );
+      if (world.current) {
+        world.current.remove(topLayer.cannonjs);
+      }
+
+      if (scene.current) {
+        scene.current.remove(topLayer.threejs);
+      }
+
+      console.log("you lose");
+
+      // gameEnded = true;
+
+      // if (resultsElement && !autopilot) resultsElement.style.display = "flex";
+    };
     const init = () => {
       world.current = new World();
       world.current.gravity.set(0, -10, 0);
@@ -240,8 +248,8 @@ export const App = () => {
         }
         gameStarted.current = true;
       } else {
-        const topLayer = stack[stack.length - 1];
-        const previousLayer = stack[stack.length - 2];
+        const topLayer = stack.current[stack.current.length - 1];
+        const previousLayer = stack.current[stack.current.length - 2];
 
         const direction = topLayer.direction;
 
