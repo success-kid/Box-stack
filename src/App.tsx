@@ -163,11 +163,11 @@ export const App = () => {
         </Text>
         <div id="ins" className="ins1">
           <Text
-            fontSize="6xl"
+            fontSize="3xl"
             fontWeight="bold"
             color="white"
             textAlign="center"
-            mt="100px"
+            mt="110px"
           >
             Click to restart
           </Text>
