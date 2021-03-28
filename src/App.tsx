@@ -1,4 +1,4 @@
-import { ChakraProvider, Text } from "@chakra-ui/react";
+import { ChakraProvider, Flex, Text } from "@chakra-ui/react";
 import { World } from "cannon";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ export const App = () => {
   const boxHeight = 1;
   const originalBoxSize = 3;
   const [score, setScore] = useState(0);
-  const width = 10;
+  const width = 12;
   const height = width * (window.innerHeight / window.innerWidth);
   let stack = React.useRef<Layer[]>([]);
   let overhangs = React.useRef<Layer[]>([]);
@@ -119,16 +119,18 @@ export const App = () => {
 
   return (
     <ChakraProvider theme={customTheme}>
-      <Text
-        position="absolute"
-        fontSize="2xl"
-        fontWeight="bold"
-        top={10}
-        right={10}
-        color="white"
-      >
-        {score}
-      </Text>
+      <Flex position="relative" justifyContent="center">
+        <Text
+          position="absolute"
+          fontSize="6xl"
+          fontWeight="bold"
+          color="white"
+          textAlign="center"
+          mt="30px"
+        >
+          {score}
+        </Text>
+      </Flex>
     </ChakraProvider>
   );
 };

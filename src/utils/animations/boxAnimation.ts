@@ -27,7 +27,7 @@ export const boxAnimation = (
   topLayer.threejs.position[topLayer.direction] += speed;
   topLayer.cannonjs.position[topLayer.direction] += speed;
   // let calc = boxHeight * (stack.length - 2) + 4;
-  let calc = stack.current.length + 2;
+  let calc = stack.current.length + 2.5;
 
   if (camera.current.position.y < calc) {
     camera.current.position.y += speed;

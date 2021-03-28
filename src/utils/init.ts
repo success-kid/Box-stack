@@ -79,7 +79,7 @@ export const init = (
   // Camera
 
   camera.current.position.set(4, 5, 4);
-  camera.current.lookAt(0, 0, 0);
+  camera.current.lookAt(0, 1, 0);
 
   // load a sound and set it as the Audio object's buffer
   camera.current.add(listener.current);
