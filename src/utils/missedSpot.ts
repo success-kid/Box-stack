@@ -34,5 +34,10 @@ export const missedTheSpot = (
   scene.current.remove(topLayer.threejs);
 
   requestAnimationFrame(() => endGameAnimation(stack, camera, renderer, scene));
+  let ins = document.getElementById("ins");
+  if (ins) {
+    ins.classList.remove("ins1");
+    ins.classList.add("ins2");
+  }
   gameEnded.current = true;
 };

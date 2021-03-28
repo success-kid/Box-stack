@@ -98,7 +98,38 @@ export const App = () => {
           );
           setScore(stack.current.length - 1);
         } else {
-          console.log("terhherhehrhehrhehrhehehehe");
+          // // Remove every object from world
+          // while (world.current.bodies.length > 0) {
+          //   world.current.remove(world.current.bodies[0]);
+          // }
+
+          // // Remove every Mesh from the scene
+          // while (scene.current.children.find((c) => c.type == "Mesh")) {
+          //   const mesh = scene.current.children.find((c) => c.type == "Mesh");
+          //   if (mesh) {
+          //     scene.current.remove(mesh);
+          //   }
+          // }
+
+          // // Reset camera positions
+          // camera.current.position.set(4, 4, 4);
+          // camera.current.lookAt(0, 0, 0);
+          // init(
+          //   originalBoxSize,
+          //   boxHeight,
+          //   stack,
+          //   overhangs,
+          //   world,
+          //   scene,
+          //   camera,
+          //   listener,
+          //   audioLoader,
+          //   sound,
+          //   renderer,
+          //   randomNumber,
+          //   gameEnded
+          // );
+          window.location.reload();
         }
       }
     });
@@ -130,6 +161,17 @@ export const App = () => {
         >
           {score}
         </Text>
+        <div id="ins" className="ins1">
+          <Text
+            fontSize="6xl"
+            fontWeight="bold"
+            color="white"
+            textAlign="center"
+            mt="100px"
+          >
+            Click to restart
+          </Text>
+        </div>
       </Flex>
     </ChakraProvider>
   );
