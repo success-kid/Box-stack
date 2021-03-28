@@ -1,41 +1,27 @@
-import {
-  Box,
-  Button,
-  ChakraProvider,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { ChakraProvider, Text } from "@chakra-ui/react";
 import { World } from "cannon";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { FaCheck } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
 import {
   Audio,
   AudioListener,
   AudioLoader,
   OrthographicCamera,
   Scene,
+  TextureLoader,
   WebGLRenderer,
 } from "three";
 import customTheme from "./theme";
 import { Layer } from "./types";
 import { init } from "./utils/init";
+import { renderScene } from "./utils/renderScene";
 import { startGame } from "./utils/startGame";
 
 export const App = () => {
   const boxHeight = 1;
   const originalBoxSize = 3;
   const [score, setScore] = useState(0);
-  // const [infiniteMode, setInfiniteMode] = useState(false);
-  const width = 15;
+  const width = 10;
   const height = width * (window.innerHeight / window.innerWidth);
   let stack = React.useRef<Layer[]>([]);
   let overhangs = React.useRef<Layer[]>([]);
@@ -44,22 +30,26 @@ export const App = () => {
   const scene = React.useRef<Scene>(new Scene());
   const camera = React.useRef<OrthographicCamera>(
     new OrthographicCamera(
-      width / -1,
-      width / 1,
-      height / 1,
-      height / -1,
+      width / -2,
+      width / 2,
+      height / 2,
+      height / -2,
       1,
       100
     )
   );
-
   const renderer = React.useRef<WebGLRenderer>(
     new WebGLRenderer({ antialias: true })
   );
   const listener = React.useRef<AudioListener>(new AudioListener());
   const sound = React.useRef<Audio>(new Audio(listener.current));
   const audioLoader = React.useRef<AudioLoader>(new AudioLoader());
+  const textureLoader = React.useRef<TextureLoader>(new TextureLoader());
   const infiniteMode = React.useRef<boolean>(false);
+  const randomNumber = React.useRef<number>(
+    Math.floor(Math.random() * Math.floor(360)) + 1
+  );
+  console.log("sad", randomNumber);
 
   useEffect(() => {
     window.addEventListener("click", (e: MouseEvent) => {
@@ -75,7 +65,8 @@ export const App = () => {
           scene,
           infiniteMode,
           originalBoxSize,
-          boxHeight
+          boxHeight,
+          randomNumber
         );
         setScore(stack.current.length - 1);
       }
@@ -85,86 +76,33 @@ export const App = () => {
       originalBoxSize,
       boxHeight,
       stack,
+      overhangs,
       world,
       scene,
       camera,
       listener,
       audioLoader,
       sound,
-      renderer
+      renderer,
+      textureLoader,
+      randomNumber
     );
+    window.addEventListener("resize", () => {
+      const aspect = window.innerWidth / window.innerHeight;
+      const width = 10;
+      const height = width / aspect;
+
+      camera.current.top = height / 2;
+      camera.current.bottom = height / -2;
+      // camera.current.position.set(4, 4, 4);
+      // Reset renderer
+      renderer.current.setSize(window.innerWidth, window.innerHeight);
+      renderScene(renderer, scene, camera);
+    });
   }, []);
 
-  const { isOpen, onClose } = useDisclosure();
   return (
     <ChakraProvider theme={customTheme}>
-      <Box position="relative">
-        <Box>
-          {/* <Button
-            position="absolute"
-            zIndex={10}
-            top={100}
-            right={10}
-            onClick={() => {
-              onOpen();
-            }}
-          >
-            Settings
-          </Button> */}
-          <Button
-            position="absolute"
-            zIndex={10}
-            top={100}
-            right={10}
-            onClick={() => {
-              infiniteMode.current
-                ? (infiniteMode.current = false)
-                : (infiniteMode.current = true);
-
-              // setInfiniteMode(!infiniteMode);
-            }}
-            rightIcon={infiniteMode.current ? <FaCheck /> : <MdClose />}
-          >
-            Infinite Mode
-          </Button>
-
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Settings</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                {/* <Button
-                  onClick={() => {
-                    {
-                      infiniteMode.current === true
-                        ? (infiniteMode.current = false)
-                        : (infiniteMode.current = true);
-                    }
-                    // setInfiniteMode(!infiniteMode);
-                  }}
-                  rightIcon={infiniteMode ? <FaCheck /> : <MdClose />}
-                >
-                  Infinite Mode
-                </Button> */}
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={() => {
-                    onClose();
-                  }}
-                >
-                  Save
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </Box>
-      </Box>
-      <Box></Box>
       <Text
         position="absolute"
         fontSize="2xl"

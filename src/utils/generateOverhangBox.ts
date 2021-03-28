@@ -1,7 +1,7 @@
 import { Body, Box as CannonBox, Vec3, World } from "cannon";
 import { BoxGeometry, Color, Mesh, MeshLambertMaterial, Scene } from "three";
 import { Layer } from "../types";
-export const generateBox = (
+export const generateOverhangBox = (
   x: number,
   y: number,
   z: number,
@@ -11,18 +11,16 @@ export const generateBox = (
   falls: boolean,
   boxHeight: number,
   stack: React.MutableRefObject<Layer[]>,
-  _: React.MutableRefObject<Layer[]>,
   scene: React.MutableRefObject<Scene>,
   world: React.MutableRefObject<World>,
   randomNumber: React.MutableRefObject<number>
 ) => {
   const geometry = new BoxGeometry(width, boxHeight, depth);
+  console.log("wtf", randomNumber);
 
   // generates cube color (hue saturation and lightness) based on stack length
-  console.log("hmm", randomNumber);
-
   const color = new Color(
-    `hsl(${randomNumber.current + stack.current.length * 4}, 100%, 50%)`
+    `hsl(${randomNumber.current + (stack.current.length - 1) * 4}, 100%, 50%)`
   );
 
   const material = new MeshLambertMaterial({

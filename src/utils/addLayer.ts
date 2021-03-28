@@ -11,8 +11,10 @@ export const addLayer = (
   direction: "x" | "z",
   boxHeight: number,
   stack: React.MutableRefObject<Layer[]>,
+  overhangs: React.MutableRefObject<Layer[]>,
   scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>
+  world: React.MutableRefObject<World>,
+  randomNumber: React.MutableRefObject<number>
 ) => {
   const y = boxHeight * stack.current.length;
   const layer: Layer = generateBox(
@@ -25,8 +27,10 @@ export const addLayer = (
     false,
     boxHeight,
     stack,
+    overhangs,
     scene,
-    world
+    world,
+    randomNumber
   );
   stack.current.push(layer);
 };

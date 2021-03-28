@@ -1,7 +1,7 @@
 import { World } from "cannon";
 import { Scene } from "three";
 import { Layer } from "../types";
-import { generateBox } from "./generateBox";
+import { generateOverhangBox } from "./generateOverhangBox";
 
 export const addOverhang = (
   x: number,
@@ -12,10 +12,13 @@ export const addOverhang = (
   stack: React.MutableRefObject<Layer[]>,
   overhangs: React.MutableRefObject<Layer[]>,
   scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>
+  world: React.MutableRefObject<World>,
+  randomNumber: React.MutableRefObject<number>
 ) => {
   const y = boxHeight * (stack.current.length - 1);
-  const overhang: Layer = generateBox(
+  console.log("addOverhang", randomNumber);
+
+  const overhang: Layer = generateOverhangBox(
     x,
     y,
     z,
@@ -26,7 +29,8 @@ export const addOverhang = (
     boxHeight,
     stack,
     scene,
-    world
+    world,
+    randomNumber
   );
   overhangs.current.push(overhang);
 };

@@ -17,8 +17,10 @@ export const startGame = (
   scene: React.MutableRefObject<Scene>,
   infiniteMode: React.MutableRefObject<boolean>,
   originalBoxSize: number,
-  boxHeight: number
+  boxHeight: number,
+  randomNumber: React.MutableRefObject<number>
 ) => {
+  let boxSpawnDistance = -5;
   if (gameStarted.current === false) {
     if (renderer.current) {
       renderer.current.setAnimationLoop(() =>
@@ -35,8 +37,8 @@ export const startGame = (
       const newWidth = originalBoxSize;
       const newDepth = originalBoxSize;
 
-      const nextX = direction === "x" ? 0 : -10;
-      const nextZ = direction === "z" ? 0 : -15;
+      const nextX = direction === "x" ? 0 : boxSpawnDistance;
+      const nextZ = direction === "z" ? 0 : boxSpawnDistance;
 
       const nextDirection = direction === "x" ? "z" : "x";
 
@@ -48,8 +50,10 @@ export const startGame = (
         nextDirection,
         boxHeight,
         stack,
+        overhangs,
         scene,
-        world
+        world,
+        randomNumber
       );
     } else {
       const topLayer = stack.current[stack.current.length - 1];
@@ -92,12 +96,15 @@ export const startGame = (
           stack,
           overhangs,
           scene,
-          world
+          world,
+          randomNumber
         );
 
         // Next layer
-        const nextX = direction === "x" ? topLayer.threejs.position.x : -10;
-        const nextZ = direction === "z" ? topLayer.threejs.position.z : -10;
+        const nextX =
+          direction === "x" ? topLayer.threejs.position.x : boxSpawnDistance;
+        const nextZ =
+          direction === "z" ? topLayer.threejs.position.z : boxSpawnDistance;
 
         const newWidth = topLayer.width;
         const newDepth = topLayer.depth;
@@ -112,11 +119,13 @@ export const startGame = (
           nextDirection,
           boxHeight,
           stack,
+          overhangs,
           scene,
-          world
+          world,
+          randomNumber
         );
       } else {
-        missedTheSpot(stack, overhangs, boxHeight, scene, world);
+        missedTheSpot(stack, overhangs, boxHeight, scene, world, randomNumber);
       }
     }
   }

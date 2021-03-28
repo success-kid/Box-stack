@@ -6,6 +6,7 @@ import {
   DirectionalLight,
   OrthographicCamera,
   Scene,
+  TextureLoader,
   WebGLRenderer,
 } from "three";
 import { Layer } from "../types";
@@ -16,18 +17,31 @@ export const init = (
   originalBoxSize: number,
   boxHeight: number,
   stack: React.MutableRefObject<Layer[]>,
+  overhangs: React.MutableRefObject<Layer[]>,
   world: React.MutableRefObject<World>,
   scene: React.MutableRefObject<Scene>,
   camera: React.MutableRefObject<OrthographicCamera>,
   listener: any,
   audioLoader: React.MutableRefObject<AudioLoader>,
   sound: React.MutableRefObject<Audio<GainNode>>,
-  renderer: React.MutableRefObject<WebGLRenderer>
+  renderer: React.MutableRefObject<WebGLRenderer>,
+  textureLoader: React.MutableRefObject<TextureLoader>,
+  randomNumber: React.MutableRefObject<number>
 ) => {
   world.current.gravity.set(0, -10, 0);
   world.current.broadphase = new NaiveBroadphase();
   world.current.solver.iterations = 40;
 
+  // scene.current.background = new Color(0x1a202c);
+  // scene.current.fog = new FogExp2(0x03544e, 0.001);
+
+  textureLoader.current.load(
+    "https://i.pinimg.com/564x/4e/4a/e2/4e4ae24b080f782b0d280aa7d5e0ca45.jpg",
+    function (texture) {
+      scene.current.background = texture;
+    }
+  );
+  // ../../public
   // Foundation
   addLayer(
     0,
@@ -37,21 +51,25 @@ export const init = (
     "x",
     boxHeight,
     stack,
+    overhangs,
     scene,
-    world
+    world,
+    randomNumber
   );
 
   // First layer
   addLayer(
-    -10,
+    -5,
     0,
     originalBoxSize,
     originalBoxSize,
     "x",
     boxHeight,
     stack,
+    overhangs,
     scene,
-    world
+    world,
+    randomNumber
   );
 
   // Set up lights
@@ -64,12 +82,11 @@ export const init = (
 
   // Camera
 
-  camera.current.position.set(4, 4, 4);
+  camera.current.position.set(4, 5, 4);
   camera.current.lookAt(0, 0, 0);
 
-  camera.current.add(listener.current);
-
   // load a sound and set it as the Audio object's buffer
+  camera.current.add(listener.current);
 
   audioLoader.current.load("ambient.ogg", (buffer: AudioBuffer) => {
     sound.current.setBuffer(buffer);

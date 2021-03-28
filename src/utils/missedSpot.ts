@@ -8,7 +8,8 @@ export const missedTheSpot = (
   overhangs: React.MutableRefObject<Layer[]>,
   boxHeight: number,
   scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>
+  world: React.MutableRefObject<World>,
+  randomNumber: React.MutableRefObject<number>
 ) => {
   const topLayer = stack.current[stack.current.length - 1];
 
@@ -22,7 +23,8 @@ export const missedTheSpot = (
     stack,
     overhangs,
     scene,
-    world
+    world,
+    randomNumber
   );
   if (world.current) {
     world.current.remove(topLayer.cannonjs);

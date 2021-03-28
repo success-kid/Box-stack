@@ -12,7 +12,16 @@ export const animation = (
   renderer: React.MutableRefObject<WebGLRenderer>,
   scene: React.MutableRefObject<Scene>
 ) => {
-  const speed = 0.15;
+  // let speed = ((stack.current.length / 200 + 0.25) * 7) / 22;
+
+  // if (speed < 0.1) {
+  //   speed = 0.11;
+  // }
+
+  // if (speed > 0.125) {
+  //   speed = 0.124;
+  // }
+  let speed = 0.05;
 
   const topLayer: Layer = stack.current[stack.current.length - 1];
 
@@ -21,10 +30,8 @@ export const animation = (
   // let calc = boxHeight * (stack.length - 2) + 4;
   let calc = stack.current.length + 2;
 
-  if (camera.current) {
-    if (camera.current.position.y < calc) {
-      camera.current.position.y += speed;
-    }
+  if (camera.current.position.y < calc) {
+    camera.current.position.y += speed;
   }
   updatePhysics(world, overhangs);
   renderScene(renderer, scene, camera);
