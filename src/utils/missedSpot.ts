@@ -1,7 +1,8 @@
 import { World } from "cannon";
-import { Scene } from "three";
+import { OrthographicCamera, Scene, WebGLRenderer } from "three";
 import { Layer } from "../types";
 import { addOverhang } from "./addOverhang";
+import { endGameAnimation } from "./animations/endGameAnimation";
 
 export const missedTheSpot = (
   stack: React.MutableRefObject<Layer[]>,
@@ -9,11 +10,13 @@ export const missedTheSpot = (
   boxHeight: number,
   scene: React.MutableRefObject<Scene>,
   world: React.MutableRefObject<World>,
-  randomNumber: React.MutableRefObject<number>
+  randomNumber: React.MutableRefObject<number>,
+  camera: React.MutableRefObject<OrthographicCamera>,
+  renderer: React.MutableRefObject<WebGLRenderer>,
+  gameEnded: React.MutableRefObject<boolean>
 ) => {
   const topLayer = stack.current[stack.current.length - 1];
 
-  // Turn to top layer into an overhang and let it fall down
   addOverhang(
     topLayer.threejs.position.x,
     topLayer.threejs.position.z,
@@ -26,17 +29,10 @@ export const missedTheSpot = (
     world,
     randomNumber
   );
-  if (world.current) {
-    world.current.remove(topLayer.cannonjs);
-  }
 
-  if (scene.current) {
-    scene.current.remove(topLayer.threejs);
-  }
+  world.current.remove(topLayer.cannonjs);
+  scene.current.remove(topLayer.threejs);
 
-  console.log("you lose");
-
-  // gameEnded = true;
-
-  // if (resultsElement && !autopilot) resultsElement.style.display = "flex";
+  requestAnimationFrame(() => endGameAnimation(stack, camera, renderer, scene));
+  gameEnded.current = true;
 };

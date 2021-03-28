@@ -1,10 +1,10 @@
 import { World } from "cannon";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { Layer } from "../types";
-import { renderScene } from "./renderScene";
-import { updatePhysics } from "./updatePhysics";
+import { Layer } from "../../types";
+import { renderScene } from "../renderScene";
+import { updatePhysics } from "../updatePhysics";
 
-export const animation = (
+export const boxAnimation = (
   stack: React.MutableRefObject<Layer[]>,
   overhangs: React.MutableRefObject<Layer[]>,
   camera: React.MutableRefObject<OrthographicCamera>,
@@ -12,16 +12,15 @@ export const animation = (
   renderer: React.MutableRefObject<WebGLRenderer>,
   scene: React.MutableRefObject<Scene>
 ) => {
-  // let speed = ((stack.current.length / 200 + 0.25) * 7) / 22;
+  let speed = ((stack.current.length / 200 + 0.25) * 7) / 22;
 
-  // if (speed < 0.1) {
-  //   speed = 0.11;
-  // }
+  if (speed < 0.1) {
+    speed = 0.1;
+  }
 
-  // if (speed > 0.125) {
-  //   speed = 0.124;
-  // }
-  let speed = 0.05;
+  if (speed > 0.12) {
+    speed = 0.12;
+  }
 
   const topLayer: Layer = stack.current[stack.current.length - 1];
 

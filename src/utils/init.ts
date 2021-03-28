@@ -3,14 +3,15 @@ import {
   AmbientLight,
   Audio,
   AudioLoader,
+  Color,
   DirectionalLight,
   OrthographicCamera,
   Scene,
-  TextureLoader,
   WebGLRenderer,
 } from "three";
 import { Layer } from "../types";
-import { addLayer } from "./addLayer";
+import { addBottomLayer } from "./layers/addBottomLayer";
+import { addLayer } from "./layers/addLayer";
 import { renderScene } from "./renderScene";
 
 export const init = (
@@ -25,33 +26,29 @@ export const init = (
   audioLoader: React.MutableRefObject<AudioLoader>,
   sound: React.MutableRefObject<Audio<GainNode>>,
   renderer: React.MutableRefObject<WebGLRenderer>,
-  textureLoader: React.MutableRefObject<TextureLoader>,
-  randomNumber: React.MutableRefObject<number>
+  randomNumber: React.MutableRefObject<number>,
+  gameEnded: React.MutableRefObject<boolean>
 ) => {
+  gameEnded.current = false;
+  stack.current = [];
+  overhangs.current = [];
+
   world.current.gravity.set(0, -10, 0);
   world.current.broadphase = new NaiveBroadphase();
   world.current.solver.iterations = 40;
 
-  // scene.current.background = new Color(0x1a202c);
-  // scene.current.fog = new FogExp2(0x03544e, 0.001);
+  scene.current.background = new Color(0x1a202c);
+  // scene.current.fog = new Fog(0xc53030, 0.1);
 
-  textureLoader.current.load(
-    "https://i.pinimg.com/564x/4e/4a/e2/4e4ae24b080f782b0d280aa7d5e0ca45.jpg",
-    function (texture) {
-      scene.current.background = texture;
-    }
-  );
-  // ../../public
-  // Foundation
-  addLayer(
+  //Foundation
+  addBottomLayer(
     0,
     0,
     originalBoxSize,
     originalBoxSize,
     "x",
-    boxHeight,
+    11,
     stack,
-    overhangs,
     scene,
     world,
     randomNumber
@@ -66,7 +63,6 @@ export const init = (
     "x",
     boxHeight,
     stack,
-    overhangs,
     scene,
     world,
     randomNumber

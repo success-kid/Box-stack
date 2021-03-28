@@ -1,7 +1,7 @@
 import { World } from "cannon";
 import { Scene } from "three";
-import { Layer } from "../types";
-import { generateBox } from "./generateBox";
+import { Layer } from "../../types";
+import { generateBox } from "../generateBox";
 
 export const addLayer = (
   x: number,
@@ -11,7 +11,6 @@ export const addLayer = (
   direction: "x" | "z",
   boxHeight: number,
   stack: React.MutableRefObject<Layer[]>,
-  overhangs: React.MutableRefObject<Layer[]>,
   scene: React.MutableRefObject<Scene>,
   world: React.MutableRefObject<World>,
   randomNumber: React.MutableRefObject<number>
@@ -27,7 +26,6 @@ export const addLayer = (
     false,
     boxHeight,
     stack,
-    overhangs,
     scene,
     world,
     randomNumber

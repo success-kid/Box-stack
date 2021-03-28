@@ -11,7 +11,6 @@ export const generateBox = (
   falls: boolean,
   boxHeight: number,
   stack: React.MutableRefObject<Layer[]>,
-  _: React.MutableRefObject<Layer[]>,
   scene: React.MutableRefObject<Scene>,
   world: React.MutableRefObject<World>,
   randomNumber: React.MutableRefObject<number>
@@ -19,10 +18,8 @@ export const generateBox = (
   const geometry = new BoxGeometry(width, boxHeight, depth);
 
   // generates cube color (hue saturation and lightness) based on stack length
-  console.log("hmm", randomNumber);
-
   const color = new Color(
-    `hsl(${randomNumber.current + stack.current.length * 4}, 100%, 50%)`
+    `hsl(${randomNumber.current + stack.current.length * 7}, 100%, 50%)`
   );
 
   const material = new MeshLambertMaterial({

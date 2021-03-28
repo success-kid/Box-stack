@@ -16,11 +16,10 @@ export const generateOverhangBox = (
   randomNumber: React.MutableRefObject<number>
 ) => {
   const geometry = new BoxGeometry(width, boxHeight, depth);
-  console.log("wtf", randomNumber);
 
   // generates cube color (hue saturation and lightness) based on stack length
   const color = new Color(
-    `hsl(${randomNumber.current + (stack.current.length - 1) * 4}, 100%, 50%)`
+    `hsl(${randomNumber.current + (stack.current.length - 1) * 7}, 100%, 50%)`
   );
 
   const material = new MeshLambertMaterial({
