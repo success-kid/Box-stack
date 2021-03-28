@@ -26,6 +26,11 @@ export const generateBox = (
     color,
   });
 
+  // var material = new MeshPhongMaterial({
+  //   color,
+  //   flatShading: true,
+  // });
+
   const cube = new Mesh(geometry, material);
   cube.position.set(x, y, z);
 

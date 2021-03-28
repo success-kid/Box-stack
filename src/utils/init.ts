@@ -9,6 +9,9 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { LuminosityShader } from "three/examples/jsm/shaders/LuminosityShader";
 import { Layer } from "../types";
 import { addBottomLayer } from "./layers/addBottomLayer";
 import { addLayer } from "./layers/addLayer";
@@ -27,8 +30,11 @@ export const init = (
   sound: React.MutableRefObject<Audio<GainNode>>,
   renderer: React.MutableRefObject<WebGLRenderer>,
   randomNumber: React.MutableRefObject<number>,
-  gameEnded: React.MutableRefObject<boolean>
+  gameEnded: React.MutableRefObject<boolean>,
+  composer: React.MutableRefObject<EffectComposer>
 ) => {
+  const luminosityPass = new ShaderPass(LuminosityShader);
+  composer.current.addPass(luminosityPass);
   gameEnded.current = false;
   stack.current = [];
   overhangs.current = [];
@@ -47,7 +53,7 @@ export const init = (
     originalBoxSize,
     originalBoxSize,
     "x",
-    11,
+    21,
     stack,
     scene,
     world,

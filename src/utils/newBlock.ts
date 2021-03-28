@@ -35,6 +35,7 @@ export const newBlock = (
   const overlap = size - overhangSize;
 
   if (overlap > 0) {
+    // paricles here
     cutBox(topLayer, overlap, size, delta, boxHeight);
 
     const overHangShift = (overlap / 2 + overhangSize / 2) * Math.sign(delta);

@@ -10,6 +10,7 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import customTheme from "./theme";
 import { Layer } from "./types";
 import { init } from "./utils/init";
@@ -52,6 +53,9 @@ export const App = () => {
   const listener = React.useRef<AudioListener>(new AudioListener());
   const sound = React.useRef<Audio>(new Audio(listener.current));
   const audioLoader = React.useRef<AudioLoader>(new AudioLoader());
+  const composer = React.useRef<EffectComposer>(
+    new EffectComposer(renderer.current)
+  );
   // const textureLoader = React.useRef<TextureLoader>(new TextureLoader());
 
   const randomNumber = React.useRef<number>(
@@ -78,8 +82,13 @@ export const App = () => {
       sound,
       renderer,
       randomNumber,
-      gameEnded
+      gameEnded,
+      composer
     );
+    // function animate() {
+    //   requestAnimationFrame(animate);
+    //   composer.current.render();
+    // }
     window.addEventListener("click", (e: MouseEvent) => {
       let element = e.target as HTMLElement;
       if (element.tagName === "CANVAS") {
@@ -94,41 +103,11 @@ export const App = () => {
             scene,
             boxHeight,
             randomNumber,
-            gameEnded
+            gameEnded,
+            composer
           );
-          setScore(stack.current.length - 1);
+          setScore(stack.current.length - 2);
         } else {
-          // // Remove every object from world
-          // while (world.current.bodies.length > 0) {
-          //   world.current.remove(world.current.bodies[0]);
-          // }
-
-          // // Remove every Mesh from the scene
-          // while (scene.current.children.find((c) => c.type == "Mesh")) {
-          //   const mesh = scene.current.children.find((c) => c.type == "Mesh");
-          //   if (mesh) {
-          //     scene.current.remove(mesh);
-          //   }
-          // }
-
-          // // Reset camera positions
-          // camera.current.position.set(4, 4, 4);
-          // camera.current.lookAt(0, 0, 0);
-          // init(
-          //   originalBoxSize,
-          //   boxHeight,
-          //   stack,
-          //   overhangs,
-          //   world,
-          //   scene,
-          //   camera,
-          //   listener,
-          //   audioLoader,
-          //   sound,
-          //   renderer,
-          //   randomNumber,
-          //   gameEnded
-          // );
           window.location.reload();
         }
       }

@@ -1,5 +1,6 @@
 import { World } from "cannon";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { Layer } from "../../types";
 import { renderScene } from "../renderScene";
 import { updatePhysics } from "../updatePhysics";
@@ -10,7 +11,8 @@ export const boxAnimation = (
   camera: React.MutableRefObject<OrthographicCamera>,
   world: React.MutableRefObject<World>,
   renderer: React.MutableRefObject<WebGLRenderer>,
-  scene: React.MutableRefObject<Scene>
+  scene: React.MutableRefObject<Scene>,
+  _: React.MutableRefObject<EffectComposer>
 ) => {
   let speed = ((stack.current.length / 200 + 0.25) * 7) / 22;
 
@@ -32,6 +34,7 @@ export const boxAnimation = (
   if (camera.current.position.y < calc) {
     camera.current.position.y += speed;
   }
+  // composer.current.render();
   updatePhysics(world, overhangs);
   renderScene(renderer, scene, camera);
 };

@@ -15,7 +15,7 @@ export const addBottomLayer = (
   world: React.MutableRefObject<World>,
   randomNumber: React.MutableRefObject<number>
 ) => {
-  const y = -5;
+  const y = -10;
   const layer: Layer = generateBox(
     x,
     y,

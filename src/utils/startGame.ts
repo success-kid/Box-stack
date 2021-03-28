@@ -1,5 +1,6 @@
 import { World } from "cannon";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { Layer } from "../types";
 import { boxAnimation } from "./animations/boxAnimation";
 import { newBlock } from "./newBlock";
@@ -14,13 +15,14 @@ export const startGame = (
   scene: React.MutableRefObject<Scene>,
   boxHeight: number,
   randomNumber: React.MutableRefObject<number>,
-  gameEnded: React.MutableRefObject<boolean>
+  gameEnded: React.MutableRefObject<boolean>,
+  composer: React.MutableRefObject<EffectComposer>
 ) => {
   gameEnded.current = false;
 
   if (gameStarted.current === false) {
     renderer.current.setAnimationLoop(() =>
-      boxAnimation(stack, overhangs, camera, world, renderer, scene)
+      boxAnimation(stack, overhangs, camera, world, renderer, scene, composer)
     );
     gameStarted.current = true;
   } else {
