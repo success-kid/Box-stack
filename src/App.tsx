@@ -160,7 +160,7 @@ export const App = () => {
             fontWeight="bold"
             color="white"
             textAlign="center"
-            mt="110px"
+            mt="105px"
           >
             Click to restart
           </Text>
