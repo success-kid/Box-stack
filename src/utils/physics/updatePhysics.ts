@@ -1,5 +1,5 @@
 import { World } from "cannon";
-import { Layer } from "../types";
+import { Layer } from "../../types";
 
 export const updatePhysics = (
   world: React.MutableRefObject<World | undefined>,

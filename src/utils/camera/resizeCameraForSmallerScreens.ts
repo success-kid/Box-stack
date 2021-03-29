@@ -1,5 +1,5 @@
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { renderScene } from "./renderScene";
+import { renderScene } from "../render/renderScene";
 
 export const resizeCameraForSmallerScreens = (
   aspect: number,

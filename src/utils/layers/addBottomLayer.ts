@@ -1,7 +1,7 @@
 import { World } from "cannon";
 import { Scene } from "three";
 import { Layer } from "../../types";
-import { generateBox } from "../generateBox";
+import { generateBox } from "../newBlockGen/generateBox";
 
 export const addBottomLayer = (
   x: number,

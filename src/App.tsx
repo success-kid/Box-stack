@@ -13,10 +13,10 @@ import {
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import customTheme from "./theme";
 import { Layer } from "./types";
-import { init } from "./utils/init";
-import { renderScene } from "./utils/renderScene";
-import { resizeCameraForSmallerScreens } from "./utils/resizeCameraForSmallerScreens";
-import { startGame } from "./utils/startGame";
+import { resizeCameraForSmallerScreens } from "./utils/camera/resizeCameraForSmallerScreens";
+import { init } from "./utils/main/init";
+import { startGame } from "./utils/main/startGame";
+import { renderScene } from "./utils/render/renderScene";
 
 export const App = () => {
   const boxHeight = 1;
@@ -55,6 +55,7 @@ export const App = () => {
   const randomNumber = React.useRef<number>(
     Math.floor(Math.random() * Math.floor(360)) + 1
   );
+  const streak = React.useRef<number>(0);
 
   useEffect(() => {
     init(
@@ -74,28 +75,29 @@ export const App = () => {
       composer
     );
 
-    window.addEventListener("click", (e: MouseEvent) => {
-      let element = e.target as HTMLElement;
-      if (element.tagName === "CANVAS") {
-        if (gameEnded.current === false) {
-          startGame(
-            gameStarted,
-            stack,
-            overhangs,
-            camera,
-            world,
-            renderer,
-            scene,
-            boxHeight,
-            randomNumber,
-            gameEnded,
-            composer
-          );
-          setScore(stack.current.length - 2);
-        } else {
-          window.location.reload();
-        }
+    window.addEventListener("click", (_: MouseEvent) => {
+      // let element = e.target as HTMLElement;
+      // if (element.tagName === "CANVAS") {
+      if (gameEnded.current === false) {
+        startGame(
+          gameStarted,
+          stack,
+          overhangs,
+          camera,
+          world,
+          renderer,
+          scene,
+          boxHeight,
+          randomNumber,
+          gameEnded,
+          composer,
+          streak
+        );
+        setScore(stack.current.length - 2);
+      } else {
+        window.location.reload();
       }
+      // }
     });
     let checkMobile = () => {
       let UserAgent = navigator.userAgent;

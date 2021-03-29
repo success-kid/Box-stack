@@ -1,8 +1,8 @@
 import { World } from "cannon";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { Layer } from "../types";
-import { addOverhang } from "./addOverhang";
-import { endGameAnimation } from "./animations/endGameAnimation";
+import { Layer } from "../../types";
+import { endGameAnimation } from "../animations/endGameAnimation";
+import { addOverhang } from "../overhangBlockGen/addOverhang";
 
 export const missedTheSpot = (
   stack: React.MutableRefObject<Layer[]>,

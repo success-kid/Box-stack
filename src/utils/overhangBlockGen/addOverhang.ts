@@ -1,6 +1,6 @@
 import { World } from "cannon";
 import { Scene } from "three";
-import { Layer } from "../types";
+import { Layer } from "../../types";
 import { generateOverhangBox } from "./generateOverhangBox";
 
 export const addOverhang = (

@@ -1,5 +1,5 @@
 import { Box as CannonBox, Vec3 } from "cannon";
-import { Layer } from "../types";
+import { Layer } from "../../types";
 export const cutBox = (
   topLayer: Layer,
   overlap: number,

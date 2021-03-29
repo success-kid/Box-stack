@@ -1,7 +1,7 @@
 import { Body, Box as CannonBox, Vec3, World } from "cannon";
 import { BoxGeometry, Color, Mesh, MeshLambertMaterial, Scene } from "three";
-import { Layer } from "../types";
-export const generateBox = (
+import { Layer } from "../../types";
+export const generateOverhangBox = (
   x: number,
   y: number,
   z: number,
@@ -19,17 +19,12 @@ export const generateBox = (
 
   // generates cube color (hue saturation and lightness) based on stack length
   const color = new Color(
-    `hsl(${randomNumber.current + stack.current.length * 7}, 100%, 50%)`
+    `hsl(${randomNumber.current + (stack.current.length - 1) * 7}, 100%, 50%)`
   );
 
   const material = new MeshLambertMaterial({
     color,
   });
-
-  // var material = new MeshPhongMaterial({
-  //   color,
-  //   flatShading: true,
-  // });
 
   const cube = new Mesh(geometry, material);
   cube.position.set(x, y, z);

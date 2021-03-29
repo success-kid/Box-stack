@@ -1,9 +1,9 @@
 import { World } from "cannon";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { Layer } from "../types";
-import { boxAnimation } from "./animations/boxAnimation";
-import { newBlock } from "./newBlock";
+import { Layer } from "../../types";
+import { boxAnimation } from "../animations/boxAnimation";
+import { newBlock } from "../newBlockGen/newBlock";
 
 export const startGame = (
   gameStarted: React.MutableRefObject<boolean>,
@@ -16,7 +16,8 @@ export const startGame = (
   boxHeight: number,
   randomNumber: React.MutableRefObject<number>,
   gameEnded: React.MutableRefObject<boolean>,
-  composer: React.MutableRefObject<EffectComposer>
+  composer: React.MutableRefObject<EffectComposer>,
+  streak: React.MutableRefObject<number>
 ) => {
   gameEnded.current = false;
 
@@ -35,7 +36,8 @@ export const startGame = (
       scene,
       boxHeight,
       randomNumber,
-      gameEnded
+      gameEnded,
+      streak
     );
   }
 };
