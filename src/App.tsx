@@ -42,9 +42,6 @@ export const App = () => {
     )
   );
 
-  /*
-new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-  */
   const renderer = React.useRef<WebGLRenderer>(
     new WebGLRenderer({ antialias: true, alpha: true })
   );
