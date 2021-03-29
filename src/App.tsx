@@ -20,26 +20,31 @@ import { startGame } from "./utils/startGame";
 
 export const App = () => {
   const boxHeight = 1;
+  let originalBoxSize = 3;
   const [score, setScore] = useState(0);
-  let aspect = React.useRef<number>(window.innerWidth / window.innerHeight);
-  let originalBoxSize = React.useRef<number>(3);
-  let size = React.useRef<number>(5);
+  let aspect = window.innerWidth / window.innerHeight;
+  let size = 5;
   let stack = React.useRef<Layer[]>([]);
   let overhangs = React.useRef<Layer[]>([]);
   const gameStarted = React.useRef<boolean>(false);
   const gameEnded = React.useRef<boolean>(false);
+  const isMobile = React.useRef<boolean>(false);
   const world = React.useRef<World>(new World());
   const scene = React.useRef<Scene>(new Scene());
   const camera = React.useRef<OrthographicCamera>(
     new OrthographicCamera(
-      (size.current * aspect.current) / -2,
-      (size.current * aspect.current) / 2,
-      size.current / 2,
-      size.current / -2,
+      (size * aspect) / -2,
+      (size * aspect) / 2,
+      size / 2,
+      size / -2,
       0,
       1000
     )
   );
+
+  /*
+new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+  */
   const renderer = React.useRef<WebGLRenderer>(
     new WebGLRenderer({ antialias: true, alpha: true })
   );
@@ -56,7 +61,7 @@ export const App = () => {
 
   useEffect(() => {
     init(
-      originalBoxSize.current,
+      originalBoxSize,
       boxHeight,
       stack,
       overhangs,
@@ -71,6 +76,7 @@ export const App = () => {
       gameEnded,
       composer
     );
+
     window.addEventListener("click", (e: MouseEvent) => {
       let element = e.target as HTMLElement;
       if (element.tagName === "CANVAS") {
@@ -103,38 +109,32 @@ export const App = () => {
         ) != null ||
         UserAgent.match(/LG|SAMSUNG|Samsung/) != null
       ) {
-        resizeCameraForSmallerScreens(
-          aspect.current,
-          size.current,
-          camera,
-          renderer,
-          scene
-        );
+        isMobile.current = true;
+      } else {
+        isMobile.current = false;
       }
     };
     checkMobile();
-
+    if (isMobile.current === true) {
+      resizeCameraForSmallerScreens(aspect, size, camera, renderer, scene);
+    }
     if (window.innerWidth <= 900) {
-      resizeCameraForSmallerScreens(
-        aspect.current,
-        size.current,
-        camera,
-        renderer,
-        scene
-      );
+      resizeCameraForSmallerScreens(aspect, size, camera, renderer, scene);
     }
 
     window.addEventListener("resize", () => {
+      var aspect = window.innerWidth / window.innerHeight;
+
       if (window.innerWidth <= 900) {
-        camera.current.left = (size.current * aspect.current) / -1;
-        camera.current.right = (size.current * aspect.current) / 1;
-        camera.current.top = size.current / 1;
-        camera.current.bottom = size.current / -1;
+        camera.current.left = (size * aspect) / -1;
+        camera.current.right = (size * aspect) / 1;
+        camera.current.top = size / 1;
+        camera.current.bottom = size / -1;
       } else {
-        camera.current.left = (size.current * aspect.current) / -2;
-        camera.current.right = (size.current * aspect.current) / 2;
-        camera.current.top = size.current / 2;
-        camera.current.bottom = size.current / -2;
+        camera.current.left = (size * aspect) / -2;
+        camera.current.right = (size * aspect) / 2;
+        camera.current.top = size / 2;
+        camera.current.bottom = size / -2;
       }
 
       camera.current.updateProjectionMatrix();
