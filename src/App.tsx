@@ -15,14 +15,15 @@ import customTheme from "./theme";
 import { Layer } from "./types";
 import { init } from "./utils/init";
 import { renderScene } from "./utils/renderScene";
+import { resizeCameraForSmallerScreens } from "./utils/resizeCameraForSmallerScreens";
 import { startGame } from "./utils/startGame";
 
 export const App = () => {
   const boxHeight = 1;
-  const originalBoxSize = 3;
   const [score, setScore] = useState(0);
-  const width = 12;
-  const height = width * (window.innerHeight / window.innerWidth);
+  let aspect = React.useRef<number>(window.innerWidth / window.innerHeight);
+  let originalBoxSize = React.useRef<number>(3);
+  let size = React.useRef<number>(5);
   let stack = React.useRef<Layer[]>([]);
   let overhangs = React.useRef<Layer[]>([]);
   const gameStarted = React.useRef<boolean>(false);
@@ -31,24 +32,16 @@ export const App = () => {
   const scene = React.useRef<Scene>(new Scene());
   const camera = React.useRef<OrthographicCamera>(
     new OrthographicCamera(
-      width / -2,
-      width / 2,
-      height / 2,
-      height / -2,
+      (size.current * aspect.current) / -2,
+      (size.current * aspect.current) / 2,
+      size.current / 2,
+      size.current / -2,
       0,
       1000
     )
   );
-  /*
-  camera = new THREE.PerspectiveCamera(
-    45, // field of view
-    aspect, // aspect ratio
-    1, // near plane
-    100 // far plane
-  );
-  */
   const renderer = React.useRef<WebGLRenderer>(
-    new WebGLRenderer({ antialias: true })
+    new WebGLRenderer({ antialias: true, alpha: true })
   );
   const listener = React.useRef<AudioListener>(new AudioListener());
   const sound = React.useRef<Audio>(new Audio(listener.current));
@@ -56,21 +49,14 @@ export const App = () => {
   const composer = React.useRef<EffectComposer>(
     new EffectComposer(renderer.current)
   );
-  // const textureLoader = React.useRef<TextureLoader>(new TextureLoader());
 
   const randomNumber = React.useRef<number>(
     Math.floor(Math.random() * Math.floor(360)) + 1
   );
-  // textureLoader.current.load(
-  //   "http://localhost:3000/texture.png",
-  //   function (texture) {
-  //     scene.current.background = texture;
-  //   }
-  // );
+
   useEffect(() => {
-    // window.focus();
     init(
-      originalBoxSize,
+      originalBoxSize.current,
       boxHeight,
       stack,
       overhangs,
@@ -85,10 +71,6 @@ export const App = () => {
       gameEnded,
       composer
     );
-    // function animate() {
-    //   requestAnimationFrame(animate);
-    //   composer.current.render();
-    // }
     window.addEventListener("click", (e: MouseEvent) => {
       let element = e.target as HTMLElement;
       if (element.tagName === "CANVAS") {
@@ -112,17 +94,52 @@ export const App = () => {
         }
       }
     });
+    let checkMobile = () => {
+      let UserAgent = navigator.userAgent;
+
+      if (
+        UserAgent.match(
+          /iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i
+        ) != null ||
+        UserAgent.match(/LG|SAMSUNG|Samsung/) != null
+      ) {
+        resizeCameraForSmallerScreens(
+          aspect.current,
+          size.current,
+          camera,
+          renderer,
+          scene
+        );
+      }
+    };
+    checkMobile();
+
+    if (window.innerWidth <= 900) {
+      resizeCameraForSmallerScreens(
+        aspect.current,
+        size.current,
+        camera,
+        renderer,
+        scene
+      );
+    }
 
     window.addEventListener("resize", () => {
-      const aspect = window.innerWidth / window.innerHeight;
-      const width = 10;
-      const height = width / aspect;
+      if (window.innerWidth <= 900) {
+        camera.current.left = (size.current * aspect.current) / -1;
+        camera.current.right = (size.current * aspect.current) / 1;
+        camera.current.top = size.current / 1;
+        camera.current.bottom = size.current / -1;
+      } else {
+        camera.current.left = (size.current * aspect.current) / -2;
+        camera.current.right = (size.current * aspect.current) / 2;
+        camera.current.top = size.current / 2;
+        camera.current.bottom = size.current / -2;
+      }
 
-      camera.current.top = height / 2;
-      camera.current.bottom = height / -2;
-      // camera.current.position.set(4, 4, 4);
-      // Reset renderer
+      camera.current.updateProjectionMatrix();
       renderer.current.setSize(window.innerWidth, window.innerHeight);
+
       renderScene(renderer, scene, camera);
     });
   }, []);

@@ -3,15 +3,12 @@ import {
   AmbientLight,
   Audio,
   AudioLoader,
-  Color,
   DirectionalLight,
   OrthographicCamera,
   Scene,
   WebGLRenderer,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import { LuminosityShader } from "three/examples/jsm/shaders/LuminosityShader";
 import { Layer } from "../types";
 import { addBottomLayer } from "./layers/addBottomLayer";
 import { addLayer } from "./layers/addLayer";
@@ -31,10 +28,10 @@ export const init = (
   renderer: React.MutableRefObject<WebGLRenderer>,
   randomNumber: React.MutableRefObject<number>,
   gameEnded: React.MutableRefObject<boolean>,
-  composer: React.MutableRefObject<EffectComposer>
+  _: React.MutableRefObject<EffectComposer>
 ) => {
-  const luminosityPass = new ShaderPass(LuminosityShader);
-  composer.current.addPass(luminosityPass);
+  // const luminosityPass = new ShaderPass(LuminosityShader);
+  // composer.current.addPass(luminosityPass);
   gameEnded.current = false;
   stack.current = [];
   overhangs.current = [];
@@ -43,8 +40,38 @@ export const init = (
   world.current.broadphase = new NaiveBroadphase();
   world.current.solver.iterations = 40;
 
-  scene.current.background = new Color(0x1a202c);
+  // scene.current.background = new LinearC(0x1a202c);
+  // scene.current
+  // renderer.current.setClearColor(0x000000, 0);
   // scene.current.fog = new Fog(0xc53030, 0.1);
+
+  // let particle = new Object3D();
+  // let geometry = new TetrahedronGeometry(0.5, 0);
+  // let material = new MeshPhongMaterial({
+  //   color: 0xffffff,
+  //   flatShading: true,
+  // });
+  // scene.current.add(particle);
+
+  // function animate() {
+  //   requestAnimationFrame(animate);
+
+  //   particle.rotation.x += 0.0;
+  //   particle.rotation.y -= 0.004;
+  //   renderer.current.clear();
+  //   renderScene(renderer, scene, camera);
+  // }
+  // animate();
+
+  // for (let i = 0; i < 1000; i++) {
+  //   let mesh = new Mesh(geometry, material);
+  //   mesh.position
+  //     .set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
+  //     .normalize();
+  //   mesh.position.multiplyScalar(90 + Math.random() * 700);
+  //   mesh.rotation.set(Math.random() * 2, Math.random() * 2, Math.random() * 2);
+  //   particle.add(mesh);
+  // }
 
   //Foundation
   addBottomLayer(
