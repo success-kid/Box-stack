@@ -1,22 +1,30 @@
-import { World } from "cannon";
-import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { Layer } from "../../types";
+import {
+  GameEnded,
+  MainCamera,
+  MainRenderer,
+  MainScene,
+  MainWorld,
+  OverhangsArray,
+  RandomNumber,
+  StackArray,
+} from "../../types";
 import { endGameAnimation } from "../animations/endGameAnimation";
+import { playBlockEffectSound } from "../newBlockGen/playBlockEffectSound";
 import { addOverhang } from "../overhangBlockGen/addOverhang";
 
 export const missedTheSpot = (
-  stack: React.MutableRefObject<Layer[]>,
-  overhangs: React.MutableRefObject<Layer[]>,
+  stack: StackArray,
+  overhangs: OverhangsArray,
   boxHeight: number,
-  scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>,
-  randomNumber: React.MutableRefObject<number>,
-  camera: React.MutableRefObject<OrthographicCamera>,
-  renderer: React.MutableRefObject<WebGLRenderer>,
-  gameEnded: React.MutableRefObject<boolean>
+  scene: MainScene,
+  world: MainWorld,
+  randomNumber: RandomNumber,
+  camera: MainCamera,
+  renderer: MainRenderer,
+  gameEnded: GameEnded
 ) => {
   const topLayer = stack.current[stack.current.length - 1];
-
+  playBlockEffectSound();
   addOverhang(
     topLayer.threejs.position.x,
     topLayer.threejs.position.z,
@@ -38,6 +46,15 @@ export const missedTheSpot = (
   if (ins) {
     ins.classList.remove("ins1");
     ins.classList.add("ins2");
+  }
+  let stored: any = localStorage.getItem("highScore");
+
+  if (stored === null) {
+    localStorage.setItem("highScore", (0).toString());
+  }
+
+  if (parseInt(stored) < stack.current.length - 2) {
+    localStorage.setItem("highScore", (stack.current.length - 2).toString());
   }
   gameEnded.current = true;
 };

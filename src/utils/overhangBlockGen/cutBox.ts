@@ -14,6 +14,7 @@ export const cutBox = (
   topLayer.width = newWidth;
   topLayer.depth = newDepth;
 
+  // size of the cut box
   topLayer.threejs.scale[direction] = overlap / size;
   topLayer.threejs.position[direction] -= delta / 2;
 

@@ -1,15 +1,24 @@
-import { NaiveBroadphase, World } from "cannon";
+import { NaiveBroadphase } from "cannon";
 import {
   AmbientLight,
-  Audio,
-  AudioLoader,
+  BufferGeometry,
+  CatmullRomCurve3,
   DirectionalLight,
-  OrthographicCamera,
-  Scene,
-  WebGLRenderer,
+  Line,
+  LineBasicMaterial,
+  Vector3,
 } from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { Layer } from "../../types";
+// import RobotoFont from "../../assets/fonts/RobotoLight.json";
+import {
+  GameEnded,
+  MainCamera,
+  MainRenderer,
+  MainScene,
+  MainWorld,
+  OverhangsArray,
+  RandomNumber,
+  StackArray,
+} from "../../types";
 import { addBottomLayer } from "../layers/addBottomLayer";
 import { addLayer } from "../layers/addLayer";
 import { renderScene } from "../render/renderScene";
@@ -17,18 +26,14 @@ import { renderScene } from "../render/renderScene";
 export const init = (
   originalBoxSize: number,
   boxHeight: number,
-  stack: React.MutableRefObject<Layer[]>,
-  overhangs: React.MutableRefObject<Layer[]>,
-  world: React.MutableRefObject<World>,
-  scene: React.MutableRefObject<Scene>,
-  camera: React.MutableRefObject<OrthographicCamera>,
-  listener: any,
-  audioLoader: React.MutableRefObject<AudioLoader>,
-  sound: React.MutableRefObject<Audio<GainNode>>,
-  renderer: React.MutableRefObject<WebGLRenderer>,
-  randomNumber: React.MutableRefObject<number>,
-  gameEnded: React.MutableRefObject<boolean>,
-  _: React.MutableRefObject<EffectComposer>
+  stack: StackArray,
+  overhangs: OverhangsArray,
+  world: MainWorld,
+  scene: MainScene,
+  camera: MainCamera,
+  renderer: MainRenderer,
+  randomNumber: RandomNumber,
+  gameEnded: GameEnded
 ) => {
   gameEnded.current = false;
   stack.current = [];
@@ -37,15 +42,36 @@ export const init = (
   world.current.gravity.set(0, -10, 0);
   world.current.broadphase = new NaiveBroadphase();
   world.current.solver.iterations = 40;
+  let stored: any = localStorage.getItem("highScore");
+
+  if (stored !== null) {
+    let path = new CatmullRomCurve3([
+      new Vector3(1, parseInt(stored), 0),
+      new Vector3(15, parseInt(stored), 0),
+    ]);
+    let points = path.getPoints(50);
+
+    const geometry = new BufferGeometry().setFromPoints(points);
+
+    const material = new LineBasicMaterial({ color: 0xff0000 });
+
+    // Create the final object to add to the scene
+    const curveObject = new Line(geometry, material);
+    scene.current.add(curveObject);
+  }
+
+  // scene.current.fog = new Fog("0x2D3748", 5, 20);
+  // scene.current.fog = new Fog("0xFFFFFF", 10, 20);
 
   //Foundation
   addBottomLayer(
     0,
+    -5,
     0,
     originalBoxSize,
     originalBoxSize,
     "x",
-    21,
+    11,
     stack,
     scene,
     world,
@@ -75,22 +101,12 @@ export const init = (
   scene.current.add(directionalLight);
 
   // Camera
+  camera.current.position.set(7, 7, 7);
+  // camera.current.zoom = -10;
 
-  camera.current.position.set(4, 5, 4);
-  camera.current.lookAt(0, 1, 0);
-
-  // load a sound and set it as the Audio object's buffer
-  camera.current.add(listener.current);
-
-  audioLoader.current.load("ambient.ogg", (buffer: AudioBuffer) => {
-    sound.current.setBuffer(buffer);
-    sound.current.setLoop(true);
-    sound.current.setVolume(0.2);
-    sound.current.play();
-  });
+  camera.current.lookAt(2, 3, 2);
 
   // Renderer
-
   renderer.current.setSize(window.innerWidth, window.innerHeight);
   renderScene(renderer, scene, camera);
 

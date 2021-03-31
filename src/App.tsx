@@ -2,15 +2,7 @@ import { ChakraProvider, Flex, Text } from "@chakra-ui/react";
 import { World } from "cannon";
 import * as React from "react";
 import { useEffect, useState } from "react";
-import {
-  Audio,
-  AudioListener,
-  AudioLoader,
-  OrthographicCamera,
-  Scene,
-  WebGLRenderer,
-} from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { OrthographicCamera, Scene, WebGLRenderer } from "three";
 import customTheme from "./theme";
 import { Layer } from "./types";
 import { resizeCameraForSmallerScreens } from "./utils/camera/resizeCameraForSmallerScreens";
@@ -23,7 +15,7 @@ export const App = () => {
   let originalBoxSize = 3;
   const [score, setScore] = useState(0);
   let aspect = window.innerWidth / window.innerHeight;
-  let size = 5;
+  let size = 10;
   let stack = React.useRef<Layer[]>([]);
   let overhangs = React.useRef<Layer[]>([]);
   const gameStarted = React.useRef<boolean>(false);
@@ -41,15 +33,12 @@ export const App = () => {
       1000
     )
   );
+  // const camera = React.useRef<PerspectiveCamera>(
+  //   new PerspectiveCamera(45, aspect, 1, 1000)
+  // );
 
   const renderer = React.useRef<WebGLRenderer>(
     new WebGLRenderer({ antialias: true, alpha: true })
-  );
-  const listener = React.useRef<AudioListener>(new AudioListener());
-  const sound = React.useRef<Audio>(new Audio(listener.current));
-  const audioLoader = React.useRef<AudioLoader>(new AudioLoader());
-  const composer = React.useRef<EffectComposer>(
-    new EffectComposer(renderer.current)
   );
 
   const randomNumber = React.useRef<number>(
@@ -66,13 +55,9 @@ export const App = () => {
       world,
       scene,
       camera,
-      listener,
-      audioLoader,
-      sound,
       renderer,
       randomNumber,
-      gameEnded,
-      composer
+      gameEnded
     );
 
     window.addEventListener("click", (_: MouseEvent) => {
@@ -90,7 +75,6 @@ export const App = () => {
           boxHeight,
           randomNumber,
           gameEnded,
-          composer,
           streak
         );
         setScore(stack.current.length - 2);

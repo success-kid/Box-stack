@@ -1,7 +1,9 @@
 import * as Tone from "tone";
-export const streakSound = (streak: React.MutableRefObject<number>) => {
+import { Streak } from "../../types";
+export const streakSound = (streak: Streak) => {
   const synth = new Tone.Synth().toDestination();
   streak.current += 1;
+  synth.volume.value = -10;
   switch (streak.current) {
     case 1:
       synth.triggerAttackRelease("C4", "8n");

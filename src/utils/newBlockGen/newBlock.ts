@@ -1,23 +1,32 @@
-import { World } from "cannon";
-import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { Layer } from "../../types";
+import {
+  GameEnded,
+  MainCamera,
+  MainRenderer,
+  MainScene,
+  MainWorld,
+  OverhangsArray,
+  RandomNumber,
+  StackArray,
+  Streak,
+} from "../../types";
 import { addLayer } from "../layers/addLayer";
 import { missedTheSpot } from "../miss/missedSpot";
 import { addOverhang } from "../overhangBlockGen/addOverhang";
 import { cutBox } from "../overhangBlockGen/cutBox";
+import { playBlockEffectSound } from "./playBlockEffectSound";
 import { streakSound } from "./streakSound";
 
 export const newBlock = (
-  stack: React.MutableRefObject<Layer[]>,
-  overhangs: React.MutableRefObject<Layer[]>,
-  camera: React.MutableRefObject<OrthographicCamera>,
-  world: React.MutableRefObject<World>,
-  renderer: React.MutableRefObject<WebGLRenderer>,
-  scene: React.MutableRefObject<Scene>,
+  stack: StackArray,
+  overhangs: OverhangsArray,
+  camera: MainCamera,
+  world: MainWorld,
+  renderer: MainRenderer,
+  scene: MainScene,
   boxHeight: number,
-  randomNumber: React.MutableRefObject<number>,
-  gameEnded: React.MutableRefObject<boolean>,
-  streak: React.MutableRefObject<number>
+  randomNumber: RandomNumber,
+  gameEnded: GameEnded,
+  streak: Streak
 ) => {
   if (gameEnded.current) return;
 
@@ -30,13 +39,21 @@ export const newBlock = (
   const delta =
     topLayer.threejs.position[direction] -
     previousLayer.threejs.position[direction];
-  let overhangSize = Math.abs(delta);
-  console.log(overhangSize);
 
+  // how big is the oversize, makes it positive
+  let overhangSize = Math.abs(delta);
+
+  // const player = new Tone.Player(blockCut).toDestination();
+  // Tone.loaded().then(() => {
+  //   player.start();
+  // });
+
+  // only runs this when overhang is bigger than 0.1 otherwise, it places it automatically perfectly
   if (overhangSize > 0.1) {
+    // resets the streak
     streak.current = 0;
     const size = direction === "x" ? topLayer.width : topLayer.depth;
-
+    playBlockEffectSound();
     // overhang size
     const overlap = size - overhangSize;
     // you didn't miss
@@ -122,21 +139,38 @@ export const newBlock = (
     const newDepth = topLayer.depth;
 
     const nextDirection = direction === "x" ? "z" : "x";
-    console.log(streak.current);
+    // if streak is bigger or equal to 8 it will start placing bigger blocks depending on the axis x or z
     if (streak.current >= 8) {
-      addLayer(
-        nextX,
-        nextZ,
-        newWidth + 0.1,
-        newDepth + 0.1,
-        nextDirection,
-        boxHeight,
-        stack,
-        scene,
-        world,
-        randomNumber
-      );
-    } else {
+      if (direction === "x") {
+        addLayer(
+          nextX,
+          nextZ,
+          newWidth,
+          newDepth + 0.1,
+          nextDirection,
+          boxHeight,
+          stack,
+          scene,
+          world,
+          randomNumber
+        );
+      } else if (direction === "z") {
+        addLayer(
+          nextX,
+          nextZ,
+          newWidth + 0.1,
+          newDepth,
+          nextDirection,
+          boxHeight,
+          stack,
+          scene,
+          world,
+          randomNumber
+        );
+      }
+    }
+    // when block is placed perfectly, but the streak isn't 8 or bigger yet
+    else {
       addLayer(
         nextX,
         nextZ,

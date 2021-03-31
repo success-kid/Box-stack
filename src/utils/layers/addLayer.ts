@@ -1,6 +1,11 @@
-import { World } from "cannon";
-import { Scene } from "three";
-import { Layer } from "../../types";
+import {
+  DirectionType,
+  Layer,
+  MainScene,
+  MainWorld,
+  RandomNumber,
+  StackArray,
+} from "../../types";
 import { generateBox } from "../newBlockGen/generateBox";
 
 export const addLayer = (
@@ -8,12 +13,12 @@ export const addLayer = (
   z: number,
   width: number,
   depth: number,
-  direction: "x" | "z",
+  direction: DirectionType,
   boxHeight: number,
-  stack: React.MutableRefObject<Layer[]>,
-  scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>,
-  randomNumber: React.MutableRefObject<number>
+  stack: StackArray,
+  scene: MainScene,
+  world: MainWorld,
+  randomNumber: RandomNumber
 ) => {
   const y = boxHeight * stack.current.length;
   const layer: Layer = generateBox(

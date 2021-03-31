@@ -1,19 +1,25 @@
-import { Body, Box as CannonBox, Vec3, World } from "cannon";
-import { BoxGeometry, Color, Mesh, MeshLambertMaterial, Scene } from "three";
-import { Layer } from "../../types";
+import { Body, Box as CannonBox, Vec3 } from "cannon";
+import { BoxGeometry, Color, Mesh, MeshLambertMaterial } from "three";
+import {
+  DirectionType,
+  MainScene,
+  MainWorld,
+  RandomNumber,
+  StackArray,
+} from "../../types";
 export const generateOverhangBox = (
   x: number,
   y: number,
   z: number,
   width: number,
   depth: number,
-  direction: "x" | "z",
+  direction: DirectionType,
   falls: boolean,
   boxHeight: number,
-  stack: React.MutableRefObject<Layer[]>,
-  scene: React.MutableRefObject<Scene>,
-  world: React.MutableRefObject<World>,
-  randomNumber: React.MutableRefObject<number>
+  stack: StackArray,
+  scene: MainScene,
+  world: MainWorld,
+  randomNumber: RandomNumber
 ) => {
   const geometry = new BoxGeometry(width, boxHeight, depth);
 
