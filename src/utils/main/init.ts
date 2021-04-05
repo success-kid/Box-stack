@@ -46,7 +46,7 @@ export const init = (
 
   if (stored !== null) {
     let path = new CatmullRomCurve3([
-      new Vector3(1, parseInt(stored), 0),
+      new Vector3(-3, parseInt(stored), 0),
       new Vector3(15, parseInt(stored), 0),
     ]);
     let points = path.getPoints(50);

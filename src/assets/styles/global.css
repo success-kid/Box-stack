@@ -1,10 +1,13 @@
 @font-face {
-  font-family: "D";
-  src: url("../fonts/control.ttf") format("truetype");
+  font-family: "numbers";
+  src: url("../fonts/numbers.ttf") format("truetype");
+}
+@font-face {
+  font-family: "text";
+  src: url("../fonts/text.ttf") format("truetype");
 }
 body {
   overflow: hidden;
-  /* font-family: "D"; */
 }
 canvas {
   width: 100%;

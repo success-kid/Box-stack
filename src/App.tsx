@@ -138,26 +138,38 @@ export const App = () => {
     <ChakraProvider theme={customTheme}>
       <Flex position="relative" justifyContent="center">
         <Text
-          fontFamily="D"
+          fontFamily="numbers"
           position="absolute"
-          fontSize="6xl"
+          fontSize="8xl"
           fontWeight="bold"
-          color="white"
+          color="gray.800"
           textAlign="center"
           mt="30px"
         >
           {score}
         </Text>
-        <div id="ins" className="ins1">
+        <div id="restart" className="ins1">
           <Text
-            fontFamily="D"
+            fontFamily="text"
             fontSize="3xl"
             fontWeight="bold"
-            color="white"
+            color="gray.800"
             textAlign="center"
-            mt="135px"
+            mt="150px"
           >
             Click to restart
+          </Text>
+        </div>
+        <div id="highscore" className="ins1">
+          <Text
+            fontFamily="text"
+            fontSize="3xl"
+            fontWeight="bold"
+            color="gray.800"
+            textAlign="center"
+            mt="195px"
+          >
+            New High Score: {score}
           </Text>
         </div>
         <IconButton
@@ -165,7 +177,7 @@ export const App = () => {
           right={10}
           top={5}
           colorScheme="blackAlpha"
-          textColor="black"
+          textColor="gray.800"
           variant="ghost"
           aria-label="github icon"
           icon={<AiFillGithub size="2em" />}
