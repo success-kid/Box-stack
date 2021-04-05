@@ -19,7 +19,7 @@
     "framer-motion": "^4.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-icons": "^3.0.0",
+    "react-icons": "^4.2.0",
     "react-scripts": "4.0.3",
     "three": "^0.126.1",
     "tone": "^14.7.77",

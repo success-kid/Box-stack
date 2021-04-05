@@ -1,7 +1,8 @@
-import { ChakraProvider, Flex, Text } from "@chakra-ui/react";
+import { ChakraProvider, Flex, IconButton, Text } from "@chakra-ui/react";
 import { World } from "cannon";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { AiFillGithub } from "react-icons/ai";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
 import { Distortion } from "tone";
 import customTheme from "./theme";
@@ -65,29 +66,29 @@ export const App = () => {
       gameEnded
     );
 
-    window.addEventListener("click", (_: MouseEvent) => {
-      // let element = e.target as HTMLElement;
-      // if (element.tagName === "CANVAS") {
-      if (gameEnded.current === false) {
-        startGame(
-          gameStarted,
-          stack,
-          overhangs,
-          camera,
-          world,
-          renderer,
-          scene,
-          boxHeight,
-          randomNumber,
-          gameEnded,
-          streak,
-          distortion
-        );
-        setScore(stack.current.length - 2);
-      } else {
-        window.location.reload();
+    window.addEventListener("click", (e: MouseEvent) => {
+      let element = e.target as HTMLElement;
+      if (element.tagName === "CANVAS") {
+        if (gameEnded.current === false) {
+          startGame(
+            gameStarted,
+            stack,
+            overhangs,
+            camera,
+            world,
+            renderer,
+            scene,
+            boxHeight,
+            randomNumber,
+            gameEnded,
+            streak,
+            distortion
+          );
+          setScore(stack.current.length - 2);
+        } else {
+          window.location.reload();
+        }
       }
-      // }
     });
     let checkMobile = () => {
       let UserAgent = navigator.userAgent;
@@ -157,6 +158,19 @@ export const App = () => {
             Click to restart
           </Text>
         </div>
+        <IconButton
+          position="absolute"
+          right={10}
+          top={5}
+          colorScheme="blackAlpha"
+          textColor="black"
+          variant="ghost"
+          aria-label="github icon"
+          icon={<AiFillGithub size="2em" />}
+          onClick={() =>
+            window.open("https://github.com/tomimarkus991/stacker", "blank")
+          }
+        />
       </Flex>
     </ChakraProvider>
   );
