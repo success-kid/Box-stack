@@ -1,4 +1,5 @@
 import { MainCamera, MainRenderer, MainScene } from "../../types";
+import { renderScene } from "../render/renderScene";
 
 export const resizeCameraForSmallerScreens = (
   aspect: number,
@@ -7,11 +8,11 @@ export const resizeCameraForSmallerScreens = (
   renderer: MainRenderer,
   scene: MainScene
 ) => {
-  // camera.current.left = (size * aspect) / -1;
-  // camera.current.right = (size * aspect) / 1;
-  // camera.current.top = size / 1;
-  // camera.current.bottom = size / -1;
-  // camera.current.updateProjectionMatrix();
-  // renderer.current.setSize(window.innerWidth, window.innerHeight);
-  // renderScene(renderer, scene, camera);
+  camera.current.left = (size * aspect) / -1.7;
+  camera.current.right = (size * aspect) / 1.7;
+  camera.current.top = size / 1.7;
+  camera.current.bottom = size / -1.7;
+  camera.current.updateProjectionMatrix();
+  renderer.current.setSize(window.innerWidth, window.innerHeight);
+  renderScene(renderer, scene, camera);
 };

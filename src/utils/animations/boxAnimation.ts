@@ -1,14 +1,12 @@
 import {
-  GameEnded,
-  Layer,
   MainCamera,
   MainRenderer,
   MainScene,
   MainWorld,
   OverhangsArray,
-  RandomNumber,
   StackArray,
 } from "../../types";
+import { animSpeed } from "../animSpeed";
 import { updatePhysics } from "../physics/updatePhysics";
 import { renderScene } from "../render/renderScene";
 
@@ -18,25 +16,9 @@ export const boxAnimation = (
   camera: MainCamera,
   world: MainWorld,
   renderer: MainRenderer,
-  scene: MainScene,
-  gameEnded: GameEnded,
-  randomNumber: RandomNumber,
-  boxHeight: number
+  scene: MainScene
 ) => {
-  let speed = ((stack.current.length / 200 + 0.25) * 7) / 22;
-  if (speed < 0.09) {
-    speed = 0.09;
-  }
-
-  if (speed > 0.12) {
-    speed = 0.12;
-  }
-
-  // let speed = 0.01;
-
-  const topLayer: Layer = stack.current[stack.current.length - 1];
-
-  let howFar = topLayer.threejs.position[topLayer.direction] + speed;
+  let { speed, topLayer, howFar } = animSpeed(stack);
 
   if (howFar <= 5) {
     topLayer.threejs.position[topLayer.direction] += speed;

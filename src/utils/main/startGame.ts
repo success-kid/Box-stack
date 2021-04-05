@@ -11,6 +11,8 @@ import {
   Streak,
 } from "../../types";
 import { boxAnimation } from "../animations/boxAnimation";
+import { animSpeed } from "../animSpeed";
+import { missedTheSpot } from "../miss/missedSpot";
 import { newBlock } from "../newBlockGen/newBlock";
 
 export const startGame = (
@@ -30,19 +32,26 @@ export const startGame = (
   gameEnded.current = false;
 
   if (gameStarted.current === false) {
-    renderer.current.setAnimationLoop(() =>
-      boxAnimation(
-        stack,
-        overhangs,
-        camera,
-        world,
-        renderer,
-        scene,
-        gameEnded,
-        randomNumber,
-        boxHeight
-      )
-    );
+    renderer.current.setAnimationLoop(() => {
+      let { howFar } = animSpeed(stack);
+
+      if (howFar >= 5 && gameEnded.current === false) {
+        missedTheSpot(
+          stack,
+          overhangs,
+          boxHeight,
+          scene,
+          world,
+          randomNumber,
+          camera,
+          renderer,
+          gameEnded,
+          distortion
+        );
+      }
+
+      boxAnimation(stack, overhangs, camera, world, renderer, scene);
+    });
     gameStarted.current = true;
   } else {
     newBlock(

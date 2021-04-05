@@ -27,6 +27,7 @@ export const missedTheSpot = (
 ) => {
   const topLayer = stack.current[stack.current.length - 1];
   playBlockEffectSound(distortion);
+
   addOverhang(
     topLayer.threejs.position.x,
     topLayer.threejs.position.z,
@@ -43,8 +44,7 @@ export const missedTheSpot = (
   world.current.remove(topLayer.cannonjs);
   scene.current.remove(topLayer.threejs);
 
-  requestAnimationFrame(() => endGameAnimation(stack, camera, renderer, scene));
-
+  requestAnimationFrame(() => endGameAnimation(camera));
   let restart = document.getElementById("restart");
   let highscore = document.getElementById("highscore");
   if (restart) {
@@ -65,5 +65,6 @@ export const missedTheSpot = (
       highscore.classList.add("ins2");
     }
   }
+
   gameEnded.current = true;
 };

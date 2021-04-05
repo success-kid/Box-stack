@@ -116,10 +116,10 @@ export const App = () => {
       var aspect = window.innerWidth / window.innerHeight;
 
       if (window.innerWidth <= 900) {
-        camera.current.left = (size * aspect) / -1;
-        camera.current.right = (size * aspect) / 1;
-        camera.current.top = size / 1;
-        camera.current.bottom = size / -1;
+        camera.current.left = (size * aspect) / -1.7;
+        camera.current.right = (size * aspect) / 1.7;
+        camera.current.top = size / 1.7;
+        camera.current.bottom = size / -1.7;
       } else {
         camera.current.left = (size * aspect) / -2;
         camera.current.right = (size * aspect) / 2;
