@@ -138,6 +138,7 @@ export const App = () => {
     <ChakraProvider theme={customTheme}>
       <Flex position="relative" justifyContent="center">
         <Text
+          fontFamily="D"
           position="absolute"
           fontSize="6xl"
           fontWeight="bold"
@@ -149,11 +150,12 @@ export const App = () => {
         </Text>
         <div id="ins" className="ins1">
           <Text
+            fontFamily="D"
             fontSize="3xl"
             fontWeight="bold"
             color="white"
             textAlign="center"
-            mt="105px"
+            mt="135px"
           >
             Click to restart
           </Text>

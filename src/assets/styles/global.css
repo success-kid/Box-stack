@@ -1,5 +1,10 @@
+@font-face {
+  font-family: "D";
+  src: url("../fonts/control.ttf") format("truetype");
+}
 body {
   overflow: hidden;
+  /* font-family: "D"; */
 }
 canvas {
   width: 100%;
