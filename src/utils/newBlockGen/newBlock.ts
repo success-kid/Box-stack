@@ -1,4 +1,5 @@
 import {
+  DistortionType,
   GameEnded,
   MainCamera,
   MainRenderer,
@@ -26,7 +27,8 @@ export const newBlock = (
   boxHeight: number,
   randomNumber: RandomNumber,
   gameEnded: GameEnded,
-  streak: Streak
+  streak: Streak,
+  distortion: DistortionType
 ) => {
   if (gameEnded.current) return;
 
@@ -53,7 +55,7 @@ export const newBlock = (
     // resets the streak
     streak.current = 0;
     const size = direction === "x" ? topLayer.width : topLayer.depth;
-    playBlockEffectSound();
+    playBlockEffectSound(distortion);
     // overhang size
     const overlap = size - overhangSize;
     // you didn't miss
@@ -121,7 +123,8 @@ export const newBlock = (
         randomNumber,
         camera,
         renderer,
-        gameEnded
+        gameEnded,
+        distortion
       );
     }
   } else {

@@ -1,9 +1,10 @@
-import { Distortion, Player } from "tone";
+import { Player } from "tone";
 import blockEffect1 from "../../assets/audio/blockEffect1.mp3";
 import blockEffect2 from "../../assets/audio/blockEffect2.mp3";
 import blockEffect3 from "../../assets/audio/blockEffect3.mp3";
+import { DistortionType } from "../../types";
 
-export let playBlockEffectSound = () => {
+export let playBlockEffectSound = (distortion: DistortionType) => {
   let randomSound = Math.floor(Math.random() * Math.floor(3)) + 1;
   let player;
 
@@ -19,8 +20,8 @@ export let playBlockEffectSound = () => {
     url: url,
     autostart: true,
   });
-  let distortion = new Distortion(0).toDestination();
+
   if (player) {
-    player.connect(distortion);
+    player.connect(distortion.current);
   }
 };

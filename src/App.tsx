@@ -3,6 +3,7 @@ import { World } from "cannon";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { OrthographicCamera, Scene, WebGLRenderer } from "three";
+import { Distortion } from "tone";
 import customTheme from "./theme";
 import { Layer } from "./types";
 import { resizeCameraForSmallerScreens } from "./utils/camera/resizeCameraForSmallerScreens";
@@ -36,6 +37,10 @@ export const App = () => {
   // const camera = React.useRef<PerspectiveCamera>(
   //   new PerspectiveCamera(45, aspect, 1, 1000)
   // );
+
+  const distortion = React.useRef<Distortion>(
+    new Distortion(0).toDestination()
+  );
 
   const renderer = React.useRef<WebGLRenderer>(
     new WebGLRenderer({ antialias: true, alpha: true })
@@ -75,7 +80,8 @@ export const App = () => {
           boxHeight,
           randomNumber,
           gameEnded,
-          streak
+          streak,
+          distortion
         );
         setScore(stack.current.length - 2);
       } else {

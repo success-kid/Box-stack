@@ -1,4 +1,5 @@
 import {
+  DistortionType,
   GameEnded,
   MainCamera,
   MainRenderer,
@@ -21,10 +22,11 @@ export const missedTheSpot = (
   randomNumber: RandomNumber,
   camera: MainCamera,
   renderer: MainRenderer,
-  gameEnded: GameEnded
+  gameEnded: GameEnded,
+  distortion: DistortionType
 ) => {
   const topLayer = stack.current[stack.current.length - 1];
-  playBlockEffectSound();
+  playBlockEffectSound(distortion);
   addOverhang(
     topLayer.threejs.position.x,
     topLayer.threejs.position.z,

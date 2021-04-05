@@ -7,6 +7,7 @@ import {
   Scene,
   WebGLRenderer,
 } from "three";
+import { Distortion } from "tone";
 
 export type Layer = {
   threejs: Mesh<BoxGeometry, MeshLambertMaterial>;
@@ -34,3 +35,4 @@ export type OverhangsArray = React.MutableRefObject<Layer[]>;
 export type RandomNumber = React.MutableRefObject<number>;
 export type Streak = React.MutableRefObject<number>;
 export type DirectionType = "x" | "z";
+export type DistortionType = React.MutableRefObject<Distortion>;

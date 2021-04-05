@@ -1,4 +1,5 @@
 import {
+  DistortionType,
   GameEnded,
   MainCamera,
   MainRenderer,
@@ -23,7 +24,8 @@ export const startGame = (
   boxHeight: number,
   randomNumber: RandomNumber,
   gameEnded: GameEnded,
-  streak: Streak
+  streak: Streak,
+  distortion: DistortionType
 ) => {
   gameEnded.current = false;
 
@@ -53,7 +55,8 @@ export const startGame = (
       boxHeight,
       randomNumber,
       gameEnded,
-      streak
+      streak,
+      distortion
     );
   }
 };
