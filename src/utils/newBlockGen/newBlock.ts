@@ -51,7 +51,7 @@ export const newBlock = (
   // });
 
   // only runs this when overhang is bigger than 0.1 otherwise, it places it automatically perfectly
-  if (overhangSize > 0.1) {
+  if (overhangSize > 0.15) {
     // resets the streak
     streak.current = 0;
     const size = direction === "x" ? topLayer.width : topLayer.depth;
