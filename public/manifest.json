@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Stacker",
+  "name": "Stacker",
   "icons": [
     {
       "src": "favicon.ico",
@@ -13,14 +13,13 @@
       "sizes": "192x192"
     },
     {
-      "src": "logo192.png",
-      "sizes": "196x196",
+      "src": "logo512.png",
       "type": "image/png",
-      "purpose": "maskable"
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#1A202C"
 }
