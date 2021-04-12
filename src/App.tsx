@@ -25,6 +25,10 @@ export const App = () => {
   const isMobile = React.useRef<boolean>(false);
   const world = React.useRef<World>(new World());
   const scene = React.useRef<Scene>(new Scene());
+  const renderer = React.useRef<WebGLRenderer>(
+    new WebGLRenderer({ antialias: true, alpha: true })
+  );
+
   const camera = React.useRef<OrthographicCamera>(
     new OrthographicCamera(
       (size * aspect) / -2,
@@ -32,7 +36,7 @@ export const App = () => {
       size / 2,
       size / -2,
       0,
-      1000
+      100
     )
   );
   // const camera = React.useRef<PerspectiveCamera>(
@@ -43,16 +47,13 @@ export const App = () => {
     new Distortion(0).toDestination()
   );
 
-  const renderer = React.useRef<WebGLRenderer>(
-    new WebGLRenderer({ antialias: true, alpha: true })
-  );
-
   const randomNumber = React.useRef<number>(
     Math.floor(Math.random() * Math.floor(360)) + 1
   );
   const streak = React.useRef<number>(0);
 
   useEffect(() => {
+    renderer.current.setSize(window.innerWidth, window.innerHeight);
     init(
       originalBoxSize,
       boxHeight,

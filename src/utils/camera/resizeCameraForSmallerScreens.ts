@@ -13,6 +13,6 @@ export const resizeCameraForSmallerScreens = (
   camera.current.top = size / 1.7;
   camera.current.bottom = size / -1.7;
   camera.current.updateProjectionMatrix();
-  renderer.current.setSize(window.innerWidth, window.innerHeight);
+  renderer.current.setSize(window.innerWidth / 1.7, window.innerHeight / 1.7);
   renderScene(renderer, scene, camera);
 };
