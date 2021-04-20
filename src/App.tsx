@@ -36,7 +36,7 @@ export const App = () => {
       size / 2,
       size / -2,
       0,
-      3,
+      100,
     ),
   );
   // const camera = React.useRef<PerspectiveCamera>(
