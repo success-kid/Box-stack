@@ -1,16 +1,16 @@
-import { ChakraProvider, Flex, IconButton, Text } from "@chakra-ui/react";
-import { World } from "cannon";
-import * as React from "react";
-import { useEffect, useState } from "react";
-import { AiFillGithub } from "react-icons/ai";
-import { OrthographicCamera, Scene, WebGLRenderer } from "three";
-import { Distortion } from "tone";
-import customTheme from "./theme";
-import { Layer } from "./types";
-import { resizeCameraForSmallerScreens } from "./utils/camera/resizeCameraForSmallerScreens";
-import { init } from "./utils/main/init";
-import { startGame } from "./utils/main/startGame";
-import { renderScene } from "./utils/render/renderScene";
+import { ChakraProvider, Flex, IconButton, Text } from '@chakra-ui/react';
+import { World } from 'cannon';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { AiFillGithub } from 'react-icons/ai';
+import { OrthographicCamera, Scene, WebGLRenderer } from 'three';
+import { Distortion } from 'tone';
+import customTheme from './theme';
+import { Layer } from './types';
+import { resizeCameraForSmallerScreens } from './utils/camera/resizeCameraForSmallerScreens';
+import { init } from './utils/main/init';
+import { startGame } from './utils/main/startGame';
+import { renderScene } from './utils/render/renderScene';
 
 export const App = () => {
   const boxHeight = 1;
@@ -26,7 +26,7 @@ export const App = () => {
   const world = React.useRef<World>(new World());
   const scene = React.useRef<Scene>(new Scene());
   const renderer = React.useRef<WebGLRenderer>(
-    new WebGLRenderer({ antialias: true, alpha: true })
+    new WebGLRenderer({ antialias: true, alpha: true }),
   );
 
   const camera = React.useRef<OrthographicCamera>(
@@ -36,24 +36,23 @@ export const App = () => {
       size / 2,
       size / -2,
       0,
-      100
-    )
+      3,
+    ),
   );
   // const camera = React.useRef<PerspectiveCamera>(
   //   new PerspectiveCamera(45, aspect, 1, 1000)
   // );
 
   const distortion = React.useRef<Distortion>(
-    new Distortion(0).toDestination()
+    new Distortion(0).toDestination(),
   );
 
   const randomNumber = React.useRef<number>(
-    Math.floor(Math.random() * Math.floor(360)) + 1
+    Math.floor(Math.random() * Math.floor(360)) + 1,
   );
   const streak = React.useRef<number>(0);
 
   useEffect(() => {
-    renderer.current.setSize(window.innerWidth, window.innerHeight);
     init(
       originalBoxSize,
       boxHeight,
@@ -64,12 +63,12 @@ export const App = () => {
       camera,
       renderer,
       randomNumber,
-      gameEnded
+      gameEnded,
     );
 
-    window.addEventListener("click", (e: MouseEvent) => {
+    window.addEventListener('click', (e: MouseEvent) => {
       let element = e.target as HTMLElement;
-      if (element.tagName === "CANVAS") {
+      if (element.tagName === 'CANVAS') {
         if (gameEnded.current === false) {
           startGame(
             gameStarted,
@@ -83,7 +82,7 @@ export const App = () => {
             randomNumber,
             gameEnded,
             streak,
-            distortion
+            distortion,
           );
           setScore(stack.current.length - 2);
         } else {
@@ -96,7 +95,7 @@ export const App = () => {
 
       if (
         UserAgent.match(
-          /iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i
+          /iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i,
         ) != null ||
         UserAgent.match(/LG|SAMSUNG|Samsung/) != null
       ) {
@@ -113,7 +112,7 @@ export const App = () => {
       resizeCameraForSmallerScreens(aspect, size, camera, renderer, scene);
     }
 
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       var aspect = window.innerWidth / window.innerHeight;
 
       if (window.innerWidth <= 900) {
@@ -183,7 +182,7 @@ export const App = () => {
           aria-label="github icon"
           icon={<AiFillGithub size="2em" />}
           onClick={() =>
-            window.open("https://github.com/tomimarkus991/stacker", "blank")
+            window.open('https://github.com/tomimarkus991/stacker', 'blank')
           }
         />
       </Flex>
